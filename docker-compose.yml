@@ -1,0 +1,33 @@
+version: "3.8"
+services:
+
+  # DATABASES
+  # Postgres database for post-service
+  post-service-pg-db:
+    image: postgres:14.15-alpine3.20
+    container_name: post-service-pg-db_container
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: post-service-pg-db
+      POSTGRES_USER: post-service-pg-db_user
+      POSTGRES_PASSWORD: post-service-pg-db_password
+    volumes:
+      - post-service-pg-db_local_data:/var/lib/postgresql/data
+  # PG Admin for postgres database UI
+  pg-admin-postgres-ui:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8888:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+
+volumes:
+  post-service-pg-db_local_data:
+  pgadmin-data:
