@@ -2,6 +2,7 @@ package com.microforum.posts.service;
 
 import com.microforum.posts.entity.Post;
 import com.microforum.posts.entity.Status;
+import com.microforum.posts.exception.ResourceNotFoundException;
 import com.microforum.posts.models.CreatePostDTO;
 import com.microforum.posts.models.UpdatePostDTO;
 import com.microforum.posts.repository.PostRepository;
@@ -34,6 +35,7 @@ public class PostService {
                 .subCategory(postDTO.getSubCategory())
                 .tags(tagService.getTagsListByIds(postDTO.getTags()))
                 .ageFlag(setAgeFlagByAnalyzerService())
+                .reviewCount(0L)
                 .status(setStatus())
             .build();
         logger.info("Saving post: {}", post);
@@ -70,7 +72,9 @@ public class PostService {
 
     public Post getPostById(Long id) {
         // TODO: throw custom exception
-        return postRepository.findById(id).orElseThrow(() -> new RuntimeException("Post not found"));
+        return postRepository
+                .findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Post", " where postId = " + id));
     }
 
     @Transactional

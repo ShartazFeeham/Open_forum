@@ -23,8 +23,6 @@ public class Post extends BaseEntity {
     private String content;
     private String category;
     private String subCategory;
-    private LocalDateTime creationDate;
-    private LocalDateTime lastModifiedDate;
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.DETACH)
     private List<Tag> tags;
     private boolean ageFlag;
