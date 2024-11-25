@@ -43,7 +43,7 @@ public class PostServiceImpl implements PostService {
                 .content(postDTO.getContent())
                 .category(postDTO.getCategory())
                 .subCategory(postDTO.getSubCategory())
-                .tags(tagService.getTagsListByIds(postDTO.getTags()))
+                .tags(tagService.getTagsListByNames(postDTO.getTags()))
                 .ageFlag(setAgeFlagByAnalyzerService())
                 .reviewCount(0L)
                 .status(setStatus())
@@ -110,7 +110,7 @@ public class PostServiceImpl implements PostService {
         post.setContent(postDTO.getContent());
         post.setCategory(postDTO.getCategory());
         post.setSubCategory(postDTO.getSubCategory());
-        post.setTags(tagService.getTagsListByIds(postDTO.getTags()));
+        post.setTags(tagService.getTagsListByNames(postDTO.getTags()));
         logger.info("Updating post: {}", post);
         var result = postRepository.save(post);
         logger.info("Updated post: {}", result);

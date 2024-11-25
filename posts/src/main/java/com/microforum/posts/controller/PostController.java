@@ -4,6 +4,7 @@ import com.microforum.posts.entity.Post;
 import com.microforum.posts.models.CreatePostDTO;
 import com.microforum.posts.models.UpdatePostDTO;
 import com.microforum.posts.service.interfaces.PostService;
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,25 +19,26 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping
-    public ResponseEntity<Post> createPost(@RequestBody CreatePostDTO postDTO) {
+    public ResponseEntity<Post> createPost(@RequestBody @NonNull CreatePostDTO postDTO) {
         Post post = postService.create(postDTO);
         return ResponseEntity.ok(post);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+    public ResponseEntity<Post> getPostById(@PathVariable @NonNull Long id) {
         Post post = postService.getPostById(id);
         return ResponseEntity.ok(post);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Post> updatePost(@PathVariable Long id, @RequestBody UpdatePostDTO postDTO) {
+    public ResponseEntity<Post> updatePost(@PathVariable @NonNull Long id,
+                                           @RequestBody @NonNull UpdatePostDTO postDTO) {
         Post updatedPost = postService.update(id, postDTO);
         return ResponseEntity.ok(updatedPost);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePost(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePost(@PathVariable @NonNull Long id) {
         postService.delete(id);
         return ResponseEntity.noContent().build();
     }
@@ -49,7 +51,7 @@ public class PostController {
     }
 
     @GetMapping("/user/{userId}")
-    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable Long userId,
+    public ResponseEntity<List<Post>> getPostsByUserId(@PathVariable @NonNull Long userId,
                                                        @RequestParam(required = false, defaultValue = "1") int page,
                                                        @RequestParam(required = false, defaultValue = "10") int size) {
         List<Post> posts = postService.getPostByUserId(userId, page, size);
@@ -57,7 +59,7 @@ public class PostController {
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable String category,
+    public ResponseEntity<List<Post>> getPostsByCategory(@PathVariable @NonNull String category,
                                                          @RequestParam(required = false, defaultValue = "1") int page,
                                                          @RequestParam(required = false, defaultValue = "10") int size) {
         List<Post> posts = postService.getPostByCategory(category, page, size);
