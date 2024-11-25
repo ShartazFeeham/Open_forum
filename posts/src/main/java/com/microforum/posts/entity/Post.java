@@ -12,7 +12,8 @@ import java.util.List;
 @Table(
     indexes = {
         @Index(name = "posts_id_index", columnList = "id"),
-        @Index(name = "posts_user_id_index", columnList = "user_id")
+        @Index(name = "posts_user_id_index", columnList = "user_id"),
+        @Index(name = "posts_category_index", columnList = "category"),
     }
 )
 public class Post extends BaseEntity {
