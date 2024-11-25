@@ -31,6 +31,6 @@ public class CreatePostDTO {
     private String subCategory;
 
     @NotEmpty(message = "Tags cannot be empty")
-    @Schema(description = "Tags of the post", example = "Adventure, Travel, Island")
+    @Schema(description = "Tags of the post", example = "[Adventure, Travel, Island]")
     private List<String> tags;
 }
