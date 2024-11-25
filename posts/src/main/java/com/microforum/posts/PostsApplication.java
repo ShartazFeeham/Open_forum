@@ -11,22 +11,18 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 @OpenAPIDefinition(
 		info = @Info(
-				title = "Accounts microservice REST API Documentation",
-				description = "EazyBank Accounts microservice REST API Documentation",
+				title = "Micro-forum Posts microservice REST API",
+				description = "Micro-forum Posts microservice REST API Documentation",
 				version = "v1",
 				contact = @Contact(
-						name = "Madan Reddy",
-						email = "tutor@eazybytes.com",
-						url = "https://www.eazybytes.com"
-				),
-				license = @License(
-						name = "Apache 2.0",
-						url = "https://www.eazybytes.com"
+						name = "Shartaz Feeham",
+						email = "shartaz.yeasar@gmail.com",
+						url = "https://github.com/ShartazFeeham/Micro_forum"
 				)
 		),
 		externalDocs = @ExternalDocumentation(
-				description =  "EazyBank Accounts microservice REST API Documentation",
-				url = "https://www.eazybytes.com/swagger-ui.html"
+				description =  "Micro-forum Posts microservice REST API Documentation",
+				url = "www.postman.com/__coming__soon"
 		)
 )
 public class PostsApplication {

@@ -13,6 +13,9 @@ import java.util.Optional;
 
 @Repository
 public interface TagRepository extends JpaRepository<Tag, Long> {
+
+    // Get tag by name
+    @Query("SELECT t FROM Tag t WHERE t.name = :name")
     Optional<Tag> findByName(String name);
 
     // Get all tags with pagination
@@ -26,4 +29,5 @@ public interface TagRepository extends JpaRepository<Tag, Long> {
     // Get posts by category with pagination
     @Query("SELECT p FROM Post p WHERE p.category = :category")
     Page<Post> findByCategory(@Param("category") String category, Pageable pageable);
+
 }

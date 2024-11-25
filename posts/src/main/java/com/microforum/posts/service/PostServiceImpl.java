@@ -77,7 +77,7 @@ public class PostServiceImpl implements PostService {
 
     private Status setStatus() {
         // TODO: aggregate user service and analyzer service response through message queue then set status to active
-        return Status.ACTIVE;
+        return Status.PUBLISHED;
     }
 
     /**

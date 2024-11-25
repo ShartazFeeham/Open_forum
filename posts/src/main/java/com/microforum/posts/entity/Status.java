@@ -3,7 +3,7 @@ package com.microforum.posts.entity;
 public enum Status {
     PENDING,
     REJECTED,
-    ACTIVE,
+    PUBLISHED,
     HIDDEN,
     DELETED,
     BANNED

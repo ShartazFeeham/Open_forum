@@ -10,6 +10,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
     // Get all posts with pagination
     @Query("SELECT p FROM Post p")
     Page<Post> findAllPosts(Pageable pageable);
@@ -21,4 +22,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     // Get posts by category with pagination
     @Query("SELECT p FROM Post p WHERE p.category = :category")
     Page<Post> findByCategory(@Param("category") String category, Pageable pageable);
+
 }
