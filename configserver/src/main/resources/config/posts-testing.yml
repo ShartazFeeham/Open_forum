@@ -8,7 +8,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/post-service-pg-db
     username: post-service-pg-db_user
-    password: post-service-pg-db_password
+    password: "{cipher}238f6c5b097c9f19411d6e383dab198b817360d11697a0f001d6187413435290a26e5228cf5493c0a2e6613de11f4318"
+
 
     # Connection pool configuration
     hikari:

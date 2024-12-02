@@ -6,9 +6,9 @@ spring:
 
   # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/post-service-pg-db
-    username: post-service-pg-db_user
-    password: post-service-pg-db_password
+    url: "{cipher}d69c75939aa5de764a16acd30d6a5e35074b2973e752f696c5ea0ce8f0abbf8a1ca4ab8a2a2b48e8adb83fb0e4dc61433a328d7d54b1097c6cab947c16310388772fdbb9998e5f602e1fec692473229f"
+    username: "{cipher}c37e79d05df441d4436dee334e9433a7ef5bd5f4c9dcced0fe814617d3b94cc5ced2a212ef69a1d5ce4d7eed4be196c5"
+    password: "{cipher}238f6c5b097c9f19411d6e383dab198b817360d11697a0f001d6187413435290a26e5228cf5493c0a2e6613de11f4318"
 
     # Connection pool configuration
     hikari:
