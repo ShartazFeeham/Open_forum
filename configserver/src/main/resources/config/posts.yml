@@ -12,6 +12,24 @@ spring:
       - "posts-testing.yml"
       - "posts-prod.yml"
 
+# Service registry config
+eureka:
+  instance:
+    preferIpAddress: true
+  client:
+    fetchRegistry: true
+    registerWithEureka: true
+    serviceUrl:
+      defaultZone: http://localhost:7777/eureka/
+
+# Application info (will be shown in eureka too)
+info:
+  app:
+    name: "posts"
+    description: "Posts service for micro-forum app"
+    version: "1.0.0"
+
+
 # Swagger custom configuration: Show swagger Ui in root path
 springdoc:
   swagger-ui:
@@ -22,4 +40,16 @@ management:
   endpoints:
     web:
       exposure:
-        include: health,info,metrics,env
+        include: "*"
+  info:
+    env:
+      enabled: true
+  # Enable shutdown endpoint
+  endpoint:
+    shutdown:
+      enabled: true
+
+# Expose shutdown endpoint
+endpoints:
+  shutdown:
+    enabled: true

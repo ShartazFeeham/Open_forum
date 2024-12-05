@@ -11,4 +11,12 @@
     --header 'Content-Type: text/plain' \
     --data 'Value to encrypt'
     ```
+  
+## Eureka service discovery
+- URL: http://localhost:7777
+- Post service shutdown curl:
+  ````shell
+  curl --location --request POST 'http://localhost:3100/actuator/shutdown'
+  ````
+
 
