@@ -3,7 +3,7 @@
 ## Config server
 - URL: http://localhost:8888
 - Service-specific config: http://localhost:8888/{service-name}/{profile}
-- Example: http://localhost:8888/posts/prod
+- Example: http://localhost:8888/posts/prod, http://localhost:8888/discovery.server/default
 
     Encryption CURL:
     ```shell
