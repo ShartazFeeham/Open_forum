@@ -10,7 +10,6 @@ spring:
     username: post-service-pg-db_user
     password: "{cipher}238f6c5b097c9f19411d6e383dab198b817360d11697a0f001d6187413435290a26e5228cf5493c0a2e6613de11f4318"
 
-
     # Connection pool configuration
     hikari:
       connection-timeout: 30000 # 30 seconds
