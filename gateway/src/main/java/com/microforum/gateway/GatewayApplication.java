@@ -7,6 +7,8 @@ import org.springframework.cloud.gateway.route.RouteLocator;
 import org.springframework.cloud.gateway.route.builder.RouteLocatorBuilder;
 import org.springframework.context.annotation.Bean;
 
+import java.time.LocalDateTime;
+
 @SpringBootApplication
 @EnableDiscoveryClient
 public class GatewayApplication {
@@ -20,7 +22,9 @@ public class GatewayApplication {
 		return routeLocatorBuilder.routes()
 				.route(p -> p
 						.path("/micro-forum/posts/**")
-						.filters(f -> f.rewritePath("/micro-forum/posts/(?<segment>.*)","/${segment}"))
+						.filters(filter -> filter
+								.rewritePath("/micro-forum/posts/(?<segment>.*)","/${segment}")
+								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
 						.uri("lb://posts"))
 				// Add more route for other services
 				.build();
