@@ -1,45 +1,8 @@
-server:
-  port: 9090
-
 spring:
+  # Basic app configuration
   application:
-    name: api-gateway
-  # Connect with service registry and locate services
-  cloud:
-    gateway:
-      discovery:
-        locator:
-          enabled: true
-          lower-case-service-id: true
+    name: "gateway"
 
-# Eureka configurations
-eureka:
-  instance:
-    preferIpAddress: true
-  client:
-    fetchRegistry: true
-    registerWithEureka: true
-    serviceUrl:
-      defaultZone: http://localhost:7777/eureka/
-
-# Application info (will be shown in eureka too)
-info:
-  app:
-    name: "posts"
-    description: "Posts service for micro-forum app"
-    version: "1.0.0"
-
-# Actuator configuration
-management:
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-  info:
-    env:
-      enabled: true
-  # Enable gateway API
-  endpoint:
-    gateway:
-      access: read_only
-
+  # Config server configuration
+  config:
+    import: "optional:configserver:http://localhost:8888/"
