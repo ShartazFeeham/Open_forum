@@ -2,6 +2,14 @@ spring:
   # Basic app configuration
   application:
     name: "gateway"
+  cloud:
+    gateway:
+      # Gateway request timeout settings
+      httpclient:
+        # Handshake timeout
+        connect-timeout: 1000
+        # Request processing timeout
+        response-timeout: 1s
 
   # Config server configuration
   config:
@@ -14,3 +22,15 @@ logging:
       microforum:
         gateway:
           DEBUG
+
+
+# Circuit breaker configurations
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
+    postsCircuitBreaker: # Same name as mentioned in gateway custom route config
+      failureRateThreshold: 30
