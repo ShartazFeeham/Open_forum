@@ -19,4 +19,8 @@
   curl --location --request POST 'http://localhost:3100/actuator/shutdown'
   ````
 
+## API gateway
+- URL: http://localhost:9999
+- All routes: http://localhost:9999/actuator/gateway/routes
+
 
