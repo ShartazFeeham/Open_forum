@@ -1,0 +1,28 @@
+# Profile config
+spring:
+  config:
+    activate:
+      on-profile: "dev"
+
+  # Database configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/post-service-pg-db
+    username: post-service-pg-db_user
+    password: post-service-pg-db_password
+
+    # Connection pool configuration
+    hikari:
+      connection-timeout: 600000 # 10 minutes
+      maximum-pool-size: 3       # Connection limit
+      auto-commit: false         # Let us handle transactions
+      idle-timeout: 1800000      # 30 minutes
+      minimum-idle: 2            # Minimum number of idle connections in the pool
+
+  # JPA configuration
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true

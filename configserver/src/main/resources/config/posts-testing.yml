@@ -1,0 +1,28 @@
+# Profile config
+spring:
+  config:
+    activate:
+      on-profile: "testing"
+
+  # Database configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5432/post-service-pg-db
+    username: post-service-pg-db_user
+    password: "{cipher}238f6c5b097c9f19411d6e383dab198b817360d11697a0f001d6187413435290a26e5228cf5493c0a2e6613de11f4318"
+
+    # Connection pool configuration
+    hikari:
+      connection-timeout: 30000 # 30 seconds
+      maximum-pool-size: 10     # Connection limit
+      auto-commit: false        # Let us handle transactions
+      idle-timeout: 600000      # 10 minutes
+      minimum-idle: 3           # Minimum number of idle connections in the pool
+
+  # JPA configuration
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
