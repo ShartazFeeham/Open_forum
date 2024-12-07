@@ -43,4 +43,12 @@ public abstract class CustomFilter {
     public final void registerSelf() {
         filterBucket.registerFilter(this, priorityIndex());
     }
+
+    protected ServerWebExchange setRequestHeader(ServerWebExchange exchange, String headerParamName, String value) {
+        return exchange.mutate()
+                .request(exchange.getRequest().mutate()
+                        .header(headerParamName, value)
+                        .build()
+                ).build();
+    }
 }

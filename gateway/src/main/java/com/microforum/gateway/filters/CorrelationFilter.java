@@ -67,14 +67,6 @@ public class CorrelationFilter extends CustomFilter {
         return null;
     }
 
-    private ServerWebExchange setRequestHeader(ServerWebExchange exchange, String name, String value) {
-        return exchange.mutate()
-                .request(exchange.getRequest().mutate()
-                        .header(name, value)
-                        .build()
-                ).build();
-    }
-
     private String generateCorrelationId() {
         String randomID = UUID.randomUUID().toString();
         StringBuilder cleanIdBuilder = new StringBuilder();
