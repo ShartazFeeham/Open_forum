@@ -1,7 +1,7 @@
 spring:
   # Basic app configuration
   application:
-    name: "discovery.server"
+    name: "discoveryserver"
 
   # Config server configuration
   config:
