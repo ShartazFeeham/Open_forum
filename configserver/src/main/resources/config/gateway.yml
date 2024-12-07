@@ -6,10 +6,17 @@ spring:
   # Connect with service registry and locate services
   cloud:
     gateway:
+      # Service scan config
       discovery:
         locator:
           enabled: true
           lower-case-service-id: true
+      # Gateway request timeout settings
+      httpclient:
+        # Handshake timeout
+        connect-timeout: 1000
+        # Request processing timeout
+        response-timeout: 2s
 
 # Eureka configurations
 eureka:
@@ -20,6 +27,17 @@ eureka:
     registerWithEureka: true
     serviceUrl:
       defaultZone: http://localhost:7777/eureka/
+
+# Circuit breaker configurations
+resilience4j.circuitbreaker:
+  configs:
+    default:
+      slidingWindowSize: 10
+      permittedNumberOfCallsInHalfOpenState: 2
+      failureRateThreshold: 50
+      waitDurationInOpenState: 10000
+    postsCircuitBreaker: # Same name as mentioned in gateway custom route config
+      failureRateThreshold: 30
 
 # Application info (will be shown in eureka too)
 info:
@@ -41,3 +59,20 @@ management:
   endpoint:
     gateway:
       access: read_only
+
+# Enable debug logging
+logging:
+  level:
+    com:
+      microforum:
+        gateway:
+          DEBUG
+
+constants:
+  retry:
+    maxAttempts: 3
+    backoff:
+      initial: 100
+      max: 1000
+      multiplier: 2
+      multiplyPrevious: true
