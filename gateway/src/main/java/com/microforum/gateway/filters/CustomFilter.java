@@ -7,8 +7,8 @@ import org.springframework.web.server.ServerWebExchange;
 @Service
 public abstract class CustomFilter {
 
-    private final FilterBucket filterBucket;
-    protected CustomFilter(FilterBucket filterBucket) {
+    private final FilterProcessor filterBucket;
+    protected CustomFilter(FilterProcessor filterBucket) {
         this.filterBucket = filterBucket;
     }
 
@@ -26,15 +26,18 @@ public abstract class CustomFilter {
 
     /**
      * Pre-filter logic that will be executed before processing the request
-     * @param exchange @{@link ServerWebExchange}
+     *
+     * @param exchange {@link ServerWebExchange}
+     * @return {@link ServerWebExchange}
      */
-    protected abstract void preFilter(ServerWebExchange exchange);
+    protected abstract ServerWebExchange preFilter(ServerWebExchange exchange);
 
     /**
      * Post-filter logic that will be executed after processing the request
-     * @param exchange @{@link ServerWebExchange}
+     * @param exchange {@link ServerWebExchange}
+     * @return {@link ServerWebExchange}
      */
-    protected abstract void postFilter(ServerWebExchange exchange);
+    protected abstract ServerWebExchange postFilter(ServerWebExchange exchange);
 
     @PostConstruct
     public final void registerSelf() {

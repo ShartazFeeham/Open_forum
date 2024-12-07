@@ -19,7 +19,7 @@ public class CorrelationFilter extends CustomFilter {
     public static final String CORRELATION_ID_KEY = "X-Correlation-ID";
     public static final int CORRELATION_ID_LENGTH = 8;
 
-    protected CorrelationFilter(FilterBucket filterBucket) {
+    protected CorrelationFilter(FilterProcessor filterBucket) {
         super(filterBucket);
     }
 
@@ -34,7 +34,7 @@ public class CorrelationFilter extends CustomFilter {
     }
 
     @Override
-    protected void preFilter(ServerWebExchange exchange) {
+    protected ServerWebExchange preFilter(ServerWebExchange exchange) {
         logger.debug("CorrelationFilter preFilter: adding correlation id in request header.");
         String correlationID = getCorrelationId(exchange.getRequest().getHeaders());
 
@@ -45,14 +45,16 @@ public class CorrelationFilter extends CustomFilter {
         } else {
             logger.debug(CORRELATION_ID_KEY + " found in RequestTraceFilter: {}", correlationID);
         }
+        return exchange;
     }
 
     @Override
-    protected void postFilter(ServerWebExchange exchange) {
+    protected ServerWebExchange postFilter(ServerWebExchange exchange) {
         logger.debug("CorrelationFilter postFilter: adding correlation id in response header.");
         String correlationId = getCorrelationId(exchange.getRequest().getHeaders());
         exchange.getResponse().getHeaders().add(CORRELATION_ID_KEY, correlationId);
         logger.debug("Updated the correlation id to response headers: {}", correlationId);
+        return exchange;
     }
 
     private String getCorrelationId(HttpHeaders requestHeaders) {
