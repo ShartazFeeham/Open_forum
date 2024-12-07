@@ -24,8 +24,11 @@ public class GatewayApplication {
 						.path("/micro-forum/posts/**")
 						.filters(filter -> filter
 								.rewritePath("/micro-forum/posts/(?<segment>.*)","/${segment}")
-								.addResponseHeader("X-Response-Time", LocalDateTime.now().toString()))
-						.uri("lb://posts"))
+								// Added to understand customization of request/response from here
+								// .addResponseHeader("X-Response-Time", LocalDateTime.now().toString())
+								// Removed after adding time filter as it already handles similar works
+								// .removeResponseHeader("X-Response-Time")
+						).uri("lb://posts"))
 				// Add more route for other services
 				.build();
 	}
