@@ -1,0 +1,14 @@
+filebeat.inputs:
+  - type: log
+    enabled: true
+    paths:
+      # Posts service logs location inside container
+      - /var/logs/micro-forum/posts_service/*.log
+      # Add more services here
+
+output.logstash:
+  hosts: ["logstash:5044"]  # Send logs to Logstash
+
+processors:
+  - add_host_metadata: ~
+  - add_cloud_metadata: ~

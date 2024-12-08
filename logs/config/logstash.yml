@@ -1,0 +1,14 @@
+http.host: "0.0.0.0"
+# This setting configures Logstash to bind its HTTP service to all network interfaces on the host machine.
+# '0.0.0.0' means it will listen for connections on all available IP addresses.
+# This makes the monitoring API accessible from remote machines.
+
+path.config: /usr/share/logstash/pipeline
+# Specifies the directory where Logstash should look for pipeline configuration files.
+# These files define how data is processed and transformed.
+# Logstash will automatically reload configurations from this directory when they change.
+
+xpack.monitoring.elasticsearch.hosts: [ "localhost:9200" ]
+# Configures Logstash to send monitoring data to an Elasticsearch instance.
+# The specified Elasticsearch instance is running on the local machine at port 9200.
+# This is part of the X-Pack Monitoring feature, which helps to track Logstash performance and health.
