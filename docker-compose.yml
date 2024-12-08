@@ -28,7 +28,7 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
-  elasticsearch:
+  elasticsearch_for_logs:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
     container_name: elasticsearch
     environment:
@@ -36,6 +36,7 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Configures the JVM heap size for Elasticsearch.
       - "discovery.type=single-node"  # Configures Elasticsearch to run in single-node mode.
       - xpack.security.enabled=false  # Disables the security features of X-Pack for Elasticsearch.
+      - xpack.monitoring.elasticsearch.ssl.verification_mode=none
     ports:
       - "9200:9200"
     volumes: # Mounts a volume to persist Elasticsearch data.
@@ -52,7 +53,7 @@ services:
       ELASTICSEARCH_URL: http://elasticsearch:9200  # Configures Kibana to connect to Elasticsearch at the given URL.
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'  # Specifies the URL for Kibana to connect to Elasticsearch.
     depends_on: # Ensures Kibana starts after Elasticsearch.
-      - elasticsearch
+      - elasticsearch_for_logs
     networks:
       - elastic
 
@@ -72,7 +73,7 @@ services:
     networks:
       - elastic
     depends_on: # Ensures Logstash starts after Elasticsearch.
-      - elasticsearch
+      - elasticsearch_for_logs
 
   filebeat:
     image: docker.elastic.co/beats/filebeat:8.3.3

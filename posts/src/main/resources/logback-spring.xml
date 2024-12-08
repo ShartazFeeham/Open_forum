@@ -3,72 +3,52 @@
 
     <!-- Include base logging configuration from Spring Boot -->
     <include resource="org/springframework/boot/logging/logback/base.xml"/>
-    <!-- Define a property for the paths to store logs -->
-    <property name="INFO_LOG_PATH" value="logs/posts/info.log" />
-    <property name="ERROR_LOG_PATH" value="logs/posts/error.log" />
-    <property name="WARN_LOG_PATH" value="logs/posts/warn.log" />
-    <property name="DEBUG_LOG_PATH" value="logs/posts/debug.log" />
-    <property name="OTHER_LOG_PATH" value="logs/posts/other.log" />
+
+    <!-- ***************** Define a property for the paths to store logs **************** -->
+    <property name="APPLICATION_NAME" value="posts" />
+    <property name="LOGS_PATH_PREFIX" value="logs/" />
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <!--            <pattern>[uniqueLogId=%X{uniqueLogId},parentId=%X{parentId}]${CONSOLE_LOG_PATTERN}</pattern>-->
-            <pattern>%d{ HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n</pattern>
+            <!--<pattern>[uniqueLogId=%X{uniqueLogId},parentId=%X{parentId}]${CONSOLE_LOG_PATTERN}</pattern>-->
             <charset>utf8</charset>
         </encoder>
     </appender>
     <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
-            <providers>
-                <logLevel/>
-                <threadName/>
-                <loggerName/>
-                <arguments>
-                </arguments>
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-                <mdc>
-                    <includeMdcKeyName>traceId</includeMdcKeyName>
-                </mdc>
-            </providers>
+
         </encoder>
     </appender>
 
     <!-- INFO level log configuration -->
     <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <!-- Define the file path for INFO logs -->
-        <file>${INFO_LOG_PATH}</file>
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/info.log/</file>
         <!-- Define the rolling policy for log rotation based on time -->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!-- Use a pattern for naming log files, including the date and hour -->
-            <fileNamePattern>logs/info/info.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/info/info__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
             <!-- Specify the maximum number of rolled over files to keep (in this case, 50) -->
             <maxHistory>50</maxHistory>
         </rollingPolicy>
         <!-- Pattern for log messages -->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- Include a timestamp in each log entry with a specific pattern and timezone -->
-                <timestamp>
-                    <fieldName>@timestamp</fieldName>
-                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
-                    <timeZone>Asia/Dhaka</timeZone>
-                </timestamp>
-                <!-- Add the log level (e.g., INFO, ERROR) to each log entry -->
-                <logLevel/>
-                <!-- Include arguments passed in the log entry if any -->
+                <pattern>
+                    <pattern>
+                        {
+                            "application": "${springAppName}",
+                            "level": "%level",
+                            "message": "%message",
+                            "timestamp": "%date{ISO8601}",
+                            "logger": "%logger",
+                            "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
                 <arguments>
                 </arguments>
-                <!-- Specify the main message of the log with a field name 'msg' -->
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-                <!-- Include the name of the thread where the log was generated -->
-                <threadName/>
-                <!-- Include the name of the logger which generated the log -->
-                <loggerName/>
-                <!-- Include values from the MDC (Mapped Diagnostic Context) for context-specific information -->
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                 </mdc>
@@ -84,28 +64,28 @@
 
     <!-- ERROR level log configuration -->
     <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${ERROR_LOG_PATH}</file>
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/error/error.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/error/error__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
             <maxHistory>50</maxHistory>
         </rollingPolicy>
         <!-- Pattern for log messages -->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- Include a timestamp in each log entry with a specific pattern and timezone -->
-                <timestamp>
-                    <fieldName>@timestamp</fieldName>
-                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
-                    <timeZone>Asia/Dhaka</timeZone>
-                </timestamp>
-                <logLevel/>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
                 <arguments>
                 </arguments>
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-                <threadName/>
-                <loggerName/>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                 </mdc>
@@ -120,28 +100,28 @@
 
     <!-- WARN level log configuration -->
     <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${WARN_LOG_PATH}</file>
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/warn.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/warn/warn.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/warn/warn__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
             <maxHistory>50</maxHistory>
         </rollingPolicy>
         <!-- Pattern for log messages -->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- Include a timestamp in each log entry with a specific pattern and timezone -->
-                <timestamp>
-                    <fieldName>@timestamp</fieldName>
-                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
-                    <timeZone>Asia/Dhaka</timeZone>
-                </timestamp>
-                <logLevel/>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
                 <arguments>
                 </arguments>
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-                <threadName/>
-                <loggerName/>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                 </mdc>
@@ -156,28 +136,28 @@
 
     <!-- DEBUG level log configuration -->
     <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${DEBUG_LOG_PATH}</file>
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/debug.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/debug/debug.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/debug/debug__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
             <maxHistory>50</maxHistory>
         </rollingPolicy>
         <!-- Pattern for log messages -->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- Include a timestamp in each log entry with a specific pattern and timezone -->
-                <timestamp>
-                    <fieldName>@timestamp</fieldName>
-                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
-                    <timeZone>Asia/Dhaka</timeZone>
-                </timestamp>
-                <logLevel/>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
                 <arguments>
                 </arguments>
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-                <threadName/>
-                <loggerName/>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                 </mdc>
@@ -192,28 +172,28 @@
 
     <!-- Default level log configuration -->
     <appender name="OTHER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${OTHER_LOG_PATH}</file>
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/other.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>logs/other/other.%d{yyyy-MM-dd-HH}.log</fileNamePattern>
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/other/other__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
             <maxHistory>50</maxHistory>
         </rollingPolicy>
         <!-- Pattern for log messages -->
         <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
             <providers>
-                <!-- Include a timestamp in each log entry with a specific pattern and timezone -->
-                <timestamp>
-                    <fieldName>@timestamp</fieldName>
-                    <pattern>yyyy-MM-dd'T'HH:mm:ss.SSSZ</pattern>
-                    <timeZone>Asia/Dhaka</timeZone>
-                </timestamp>
-                <logLevel/>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
                 <arguments>
                 </arguments>
-                <message>
-                    <fieldName>msg</fieldName>
-                </message>
-                <threadName/>
-                <loggerName/>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
                 </mdc>
@@ -246,7 +226,7 @@
 
     </appender>
 
-    <!-- Define the root logger with references to both INFO and ERROR appenders -->
+    <!-- Define the root logger with references to all appenders -->
     <root level="INFO">
         <appender-ref ref="INFO_FILE" />
         <appender-ref ref="ERROR_FILE" />

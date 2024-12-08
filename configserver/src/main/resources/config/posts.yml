@@ -53,8 +53,3 @@ management:
 endpoints:
   shutdown:
     enabled: true
-
-# Logging
-logging:
-  file:
-    name: src/logs/app.log
