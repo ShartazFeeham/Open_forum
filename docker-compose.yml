@@ -89,6 +89,25 @@ services:
     depends_on:
       - logstash  # Ensure Filebeat starts after Logstash
 
+  # Monitoring
+  prometheus:
+    image: prom/prometheus:v2.44.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/monitoring/config/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  grafana:
+    image: grafana/grafana:9.5.2
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./observability/monitoring/config/datasources:/etc/grafana/provisioning/datasources
+
+# Defines custom networks.
 networks: # Defines custom networks.
   elastic:
     driver: bridge  # Specifies the bridge driver for creating an isolated network.

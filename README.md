@@ -23,4 +23,8 @@
 - URL: http://localhost:9999
 - All routes: http://localhost:9999/actuator/gateway/routes
 
-
+## Logging, Monitoring, Tracing
+#### Monitoring
+All the services has monitoring enabled, see config servers from below:
+- Config server actuator monitoring URL(JSON): http://localhost:8888/actuator/metrics
+- Config server actuator monitoring URL(PROMETHEUS): http://localhost:8888/actuator/prometheus
