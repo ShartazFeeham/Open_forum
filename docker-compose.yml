@@ -36,7 +36,6 @@ services:
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Configures the JVM heap size for Elasticsearch.
       - "discovery.type=single-node"  # Configures Elasticsearch to run in single-node mode.
       - xpack.security.enabled=false  # Disables the security features of X-Pack for Elasticsearch.
-      - xpack.monitoring.elasticsearch.ssl.verification_mode=none
     ports:
       - "9200:9200"
     volumes: # Mounts a volume to persist Elasticsearch data.
