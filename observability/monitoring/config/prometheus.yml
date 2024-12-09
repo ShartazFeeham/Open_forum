@@ -1,8 +1,46 @@
 scrape_configs:
+
+  # Prometheus
+  - job_name: 'prometheus'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9090' ]
+        labels:
+          application: 'Prometheus monitoring'
+
+  # Config server
   - job_name: 'config_server_metrics'
     metrics_path: '/actuator/prometheus'
     scrape_interval: 3s
     static_configs:
-      - targets: ['host.docker.internal:8888']
+      - targets: [ 'host.docker.internal:8888' ]
         labels:
           application: 'Config server application'
+
+  # Gateway
+  - job_name: 'gateway_metrics'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:9999' ]
+        labels:
+          application: 'Gateway application'
+
+  # Service registry
+  - job_name: 'discovery_server_metrics'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:7777' ]
+        labels:
+          application: 'Eureka application'
+
+  # Posts service
+  - job_name: 'posts_service_metrics'
+    metrics_path: '/actuator/prometheus'
+    scrape_interval: 3s
+    static_configs:
+      - targets: [ 'host.docker.internal:3100' ]
+        labels:
+          application: 'Posts service'
