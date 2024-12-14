@@ -51,6 +51,7 @@
                 </arguments>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
                 </mdc>
             </providers>
         </encoder>
@@ -88,6 +89,7 @@
                 </arguments>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
                 </mdc>
             </providers>
         </encoder>
@@ -124,6 +126,7 @@
                 </arguments>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
                 </mdc>
             </providers>
         </encoder>
@@ -160,6 +163,7 @@
                 </arguments>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
                 </mdc>
             </providers>
         </encoder>
@@ -196,6 +200,7 @@
                 </arguments>
                 <mdc>
                     <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
                 </mdc>
             </providers>
         </encoder>
