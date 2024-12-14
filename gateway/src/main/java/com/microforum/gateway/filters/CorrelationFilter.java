@@ -57,6 +57,11 @@ public class CorrelationFilter extends CustomFilter {
         return exchange;
     }
 
+    @Override
+    protected boolean isEnabled() {
+        return false;
+    }
+
     private String getCorrelationId(HttpHeaders requestHeaders) {
         if (!CollectionUtils.isEmpty(requestHeaders.get(CORRELATION_ID_KEY))) {
             List<String> requestHeaderList = requestHeaders.get(CORRELATION_ID_KEY);
