@@ -83,6 +83,7 @@ services:
       - ./logs/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro  # Mount your Filebeat config
       # Posts service log location : container storage location where to copy logs
       - ./logs/posts:/var/logs/micro-forum/posts_service:ro
+      - ./logs/gateway:/var/logs/micro-forum/gateway_service:ro
       # Add more service here
     networks:
       - elastic
