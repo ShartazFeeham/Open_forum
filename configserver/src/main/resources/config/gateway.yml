@@ -4,6 +4,10 @@ server:
 
 spring:
   # Connect with service registry and locate services
+  reactor:
+    # To let context propagate across asynchronous executions, thread boundaries, and even across different services (Security
+    # credentials, Correlation ID, tracing requests across services, locale settings for internationalization
+    context-propagation: auto
   cloud:
     gateway:
       # Service scan config
@@ -55,6 +59,18 @@ management:
   info:
     env:
       enabled: true
+
+  # For tracing
+  otlp:
+    metrics:
+      export:
+        enabled: false
+        step: 1m
+        url: https://otlp.eu01.nr-data.net
+  tracing:
+    sampling:
+      probability: 1.0f
+
   # Enable gateway API
   endpoint:
     gateway:
