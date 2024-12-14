@@ -47,6 +47,11 @@ public class TimeFilter extends CustomFilter {
         return attemptAddingProcessingTime(exchange);
     }
 
+    @Override
+    protected boolean isEnabled() {
+        return true;
+    }
+
     private ServerWebExchange attemptAddingProcessingTime(ServerWebExchange exchange) {
         Instant requestAcceptTime = readTimeFromHeader(exchange, REQUEST_ACCEPT_TIME);
         Instant requestDeliveryTime = readTimeFromHeader(exchange, REQUEST_DELIVERY_TIME);
@@ -59,6 +64,9 @@ public class TimeFilter extends CustomFilter {
             exchange.getResponse().getHeaders().add(REQUEST_ACCEPT_TIME, requestAcceptDateTime.toString());
             exchange.getResponse().getHeaders().add(REQUEST_DELIVERY_TIME, requestDeliveryDateTime.toString());
             exchange.getResponse().getHeaders().add(REQUEST_PROCESSING_TIME, String.valueOf(processingTime));
+
+            logger.info("Request time: {}, Response time: {}, Processing time: {} ms",
+                    requestAcceptTime, requestDeliveryTime, processingTime);
         }
         return exchange;
     }
