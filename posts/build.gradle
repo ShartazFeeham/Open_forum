@@ -23,28 +23,38 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-actuator'
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	// Fundamental
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.cloud:spring-cloud-starter-config'
-	compileOnly 'org.projectlombok:lombok'
-	runtimeOnly 'org.postgresql:postgresql'
-	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+	// Tools
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
 	implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.6.0'
+	annotationProcessor 'org.projectlombok:lombok'
+	compileOnly 'org.projectlombok:lombok'
+
+	// Database
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+	runtimeOnly 'org.postgresql:postgresql'
+
+	// Microservices
+	implementation 'org.springframework.cloud:spring-cloud-starter-config'
 	implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client'
+
+	// Logging
 	implementation group: 'net.logstash.logback', name: 'logstash-logback-encoder', version: '7.2'
+
+	// Monitoring
 	implementation group: 'io.micrometer', name: 'micrometer-registry-prometheus', version: '1.14.1'
 
-	implementation("io.micrometer:micrometer-registry-otlp")
+	// Tracing
 	implementation("io.micrometer:micrometer-tracing-bridge-otel")
-	implementation("io.opentelemetry:opentelemetry-exporter-otlp")
 
+	// Event driven
 	implementation 'org.springframework.cloud:spring-cloud-stream'
 	implementation 'org.springframework.cloud:spring-cloud-stream-binder-rabbit'
-	implementation 'org.springframework.cloud:spring-cloud-stream-test-binder'
 }
 
 dependencyManagement {
