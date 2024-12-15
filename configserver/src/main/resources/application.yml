@@ -14,3 +14,9 @@ server:
 
 encrypt:
   key: "JDF68DF74J54JN3443989GF8G9F8G94N3KN54"
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'

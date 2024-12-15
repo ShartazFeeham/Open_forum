@@ -44,6 +44,18 @@ management:
   info:
     env:
       enabled: true
+
+  # For tracing
+  otlp:
+    metrics:
+      export:
+        enabled: false
+        step: 1m
+        url: https://otlp.eu01.nr-data.net
+  tracing:
+    sampling:
+      probability: 1.0f
+
   # Enable shutdown endpoint
   endpoint:
     shutdown:

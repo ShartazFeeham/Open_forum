@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <!-- Include base logging configuration from Spring Boot -->
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- ***************** Define a property for the paths to store logs **************** -->
+    <property name="APPLICATION_NAME" value="posts" />
+    <property name="LOGS_PATH_PREFIX" value="logs/" />
+    <springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--<pattern>[uniqueLogId=%X{uniqueLogId},parentId=%X{parentId}]${CONSOLE_LOG_PATTERN}</pattern>-->
+            <charset>utf8</charset>
+        </encoder>
+    </appender>
+    <appender name="STDOUT_JSON" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+
+        </encoder>
+    </appender>
+
+    <!-- INFO level log configuration -->
+    <appender name="INFO_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!-- Define the file path for INFO logs -->
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/info.log/</file>
+        <!-- Define the rolling policy for log rotation based on time -->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!-- Use a pattern for naming log files, including the date and hour -->
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/info/info__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
+            <!-- Specify the maximum number of rolled over files to keep (in this case, 50) -->
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+        <!-- Pattern for log messages -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                            "application": "${springAppName}",
+                            "level": "%level",
+                            "message": "%message",
+                            "timestamp": "%date{ISO8601}",
+                            "logger": "%logger",
+                            "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
+                <arguments>
+                </arguments>
+                <mdc>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
+                </mdc>
+            </providers>
+        </encoder>
+        <!-- Filter to log only INFO and higher levels -->
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- ERROR level log configuration -->
+    <appender name="ERROR_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/error/error__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+        <!-- Pattern for log messages -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
+                <arguments>
+                </arguments>
+                <mdc>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
+                </mdc>
+            </providers>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- WARN level log configuration -->
+    <appender name="WARN_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/warn.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/warn/warn__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+        <!-- Pattern for log messages -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
+                <arguments>
+                </arguments>
+                <mdc>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
+                </mdc>
+            </providers>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- DEBUG level log configuration -->
+    <appender name="DEBUG_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/debug.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/debug/debug__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+        <!-- Pattern for log messages -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
+                <arguments>
+                </arguments>
+                <mdc>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
+                </mdc>
+            </providers>
+        </encoder>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+    </appender>
+
+    <!-- Default level log configuration -->
+    <appender name="OTHER_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/other.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOGS_PATH_PREFIX}${APPLICATION_NAME}/other/other__%d{yyyy-MM-dd__HH-MM-SS}.log</fileNamePattern>
+            <maxHistory>50</maxHistory>
+        </rollingPolicy>
+        <!-- Pattern for log messages -->
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <pattern>
+                    <pattern>
+                        {
+                        "application": "${springAppName}",
+                        "level": "%level",
+                        "message": "%message",
+                        "timestamp": "%date{ISO8601}",
+                        "logger": "%logger",
+                        "thread": "%thread"
+                        }
+                    </pattern>
+                </pattern>
+                <arguments>
+                </arguments>
+                <mdc>
+                    <includeMdcKeyName>traceId</includeMdcKeyName>
+                    <includeMdcKeyName>spanId</includeMdcKeyName>
+                </mdc>
+            </providers>
+        </encoder>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>INFO</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>WARN</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>DEBUG</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>NEUTRAL</onMismatch>
+        </filter>
+
+    </appender>
+
+    <!-- Define the root logger with references to all appenders -->
+    <root level="INFO">
+        <appender-ref ref="INFO_FILE" />
+        <appender-ref ref="ERROR_FILE" />
+        <appender-ref ref="WARN_FILE" />
+        <appender-ref ref="DEBUG_FILE" />
+        <appender-ref ref="OTHER_FILE" />
+    </root>
+</configuration>

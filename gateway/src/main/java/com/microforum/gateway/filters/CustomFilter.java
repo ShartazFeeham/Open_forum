@@ -39,9 +39,13 @@ public abstract class CustomFilter {
      */
     protected abstract ServerWebExchange postFilter(ServerWebExchange exchange);
 
+    protected abstract boolean isEnabled();
+
     @PostConstruct
     public final void registerSelf() {
-        filterBucket.registerFilter(this, priorityIndex());
+        if (isEnabled()) {
+            filterBucket.registerFilter(this, priorityIndex());
+        }
     }
 
     protected ServerWebExchange setRequestHeader(ServerWebExchange exchange, String headerParamName, String value) {
