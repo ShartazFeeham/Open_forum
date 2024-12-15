@@ -16,27 +16,27 @@ public class SenderFunctions {
     @Bean
     public Consumer<Notification> sendEmail() {
         return notification -> {
-            logger.info("Sending email notification: {}", notification);
+            logger.info("User-{}'s, notification-{} -> Sending email notification: {}", notification.userId(), notification.id(), notification);
             delay(2000);
-            logger.info("Email notification sent: {}", notification);
+            logger.info("EMAIL SENT! User-{}'s, notification-{}, notification: {}", notification.userId(), notification.id(), notification);
         };
     }
 
     @Bean
     public Consumer<Notification> sendSms() {
         return notification -> {
-            logger.info("Sending SMS notification: {}", notification);
+            logger.info("User-{}'s, notification-{} -> Sending SMS notification: {}", notification.userId(), notification.id(), notification);
             delay(3000);
-            logger.info("SMS notification sent: {}", notification);
+            logger.info("SMS SENT! User-{}'s, notification-{}, notification: {}", notification.userId(), notification.id(), notification);
         };
     }
 
     @Bean
     public Consumer<Notification> sendPush() {
         return notification -> {
-            logger.info("Sending push notification: {}", notification);
+            logger.info("User-{}'s, notification-{} -> Sending push notification: {}", notification.userId(), notification.id(), notification);
             delay(1000);
-            logger.info("Push notification sent: {}", notification);
+            logger.info("PUSH SENT! User-{}'s, notification-{}, notification: {}", notification.userId(), notification.id(), notification);
         };
     }
 

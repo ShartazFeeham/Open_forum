@@ -22,7 +22,7 @@ public class AnalyzerFunctions {
             // Check user notification preferences, notification redundancy, notification type, notification source
             // And determine whether to send or not
             boolean allowed = random.nextInt(10) > 3; // Randomly giving 70% chance to send notification
-            logger.info("Sending allowed: {}, Notification: {}, Type: {}", allowed, notification, type);
+            logger.info("User-{}'s, notification ({}) sending allowed: {}, Notification: {}", notification.userId(), type, allowed, notification);
             return allowed;
         };
     }

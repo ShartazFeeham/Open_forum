@@ -32,12 +32,12 @@ public class NotificationFunctions {
     @Bean
     public Function<NotificationCreateDTO, Notification> generateNotification() {
         return (notDto) -> {
-            Notification notification = new Notification(random.nextLong(), LocalDateTime.now(),
+            Notification notification = new Notification(random.nextLong(1_000_000_000_000_000L), LocalDateTime.now(),
                     LocalDateTime.now().plusSeconds(notDto.durationInSeconds() == null ? 1_000_000_000 : notDto.durationInSeconds()),
                     false, notDto.title(), notDto.message(), notDto.url(), notDto.prefix(), notDto.suffix(),
                     notDto.userId(), notDto.email(), notDto.phoneNo(), notDto.notificationTypes(), notDto.source());
 
-            logger.info("Created notification: {}", notification);
+            logger.info("User-{}'s, notification created: {}", notDto.userId(), notification);
             return notification;
         };
     }
