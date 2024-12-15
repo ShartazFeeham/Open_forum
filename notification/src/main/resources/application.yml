@@ -1,0 +1,9 @@
+server:
+  port: 3400
+
+spring:
+  application:
+    name: "notifications"
+  cloud:
+    function:
+      definition: generateNotification|sendNotification
