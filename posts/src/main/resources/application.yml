@@ -10,3 +10,21 @@ spring:
   # Default active profile
   profiles:
     default: "dev"
+
+  cloud:
+    stream:
+      bindings:
+        generateNotificationsendNotification-in-0:
+          destination: notifications-sent
+          group: ${spring.application.name}
+        generateNotificationsendNotification-out-0:
+          destination: send-notification
+          group: ${spring.application.name}
+
+  # RabbitMQ configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
