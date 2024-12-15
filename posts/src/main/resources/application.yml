@@ -12,14 +12,19 @@ spring:
     default: "dev"
 
   cloud:
+    function:
+      definition: handleDeliveredNotification
+
     stream:
       bindings:
-        generateNotificationsendNotification-in-0:
-          destination: notifications-sent
+        # Consumer configuration for 'notification-delivered' exchange
+        handleDeliveredNotification-in-0:
+          destination: notification-delivered
           group: ${spring.application.name}
-        generateNotificationsendNotification-out-0:
+
+        # Publisher configuration for 'send-notification' exchange
+        notificationSender-out-0:
           destination: send-notification
-          group: ${spring.application.name}
 
   # RabbitMQ configuration
   rabbitmq:

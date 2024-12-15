@@ -23,6 +23,7 @@ import java.util.*;
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
 
+    public static final String NOTIFICATION_SENDER_EXCHANGE = "notificationSender-out-0";
     private final PostRepository postRepository;
     private final TagServiceImpl tagService;
     private final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
@@ -220,7 +221,7 @@ public class PostServiceImpl implements PostService {
         followersInfo.forEach(userInfo -> {
             var notification = buildNotification(post, userInfo);
             logger.info("Sending notification: {} for post {}", notification, post);
-            boolean result = streamBridge.send("generateNotificationsendNotification-out-0", notification);
+            boolean result = streamBridge.send(NOTIFICATION_SENDER_EXCHANGE, notification);
             logger.info("Post notification request successfully triggered ? : {}", result);
         });
     }
@@ -242,7 +243,8 @@ public class PostServiceImpl implements PostService {
     }
 
     private Map<String, Object> getUserContactInfo(Long userId) {
-        return Map.of("email", "user_" + userId + "_name" + random.nextInt(100) + "@gmail.com",
+        return Map.of("id", userId,
+                "email", "user_" + userId + "_name" + random.nextInt(100) + "@gmail.com",
                 "phoneNo", "+880 1" + (3+random.nextInt(7)) + (random.nextInt(99_999_999) + 100_000_000));
     }
 
@@ -254,7 +256,7 @@ public class PostServiceImpl implements PostService {
                 .addParam("prefix", null)
                 .addParam("suffix", "Hurry up and be the first to comment!")
                 .addParam("durationInSeconds", 1000 * 60 * 60 * 24 * 7) // 7 days
-                .addParam("userId", post.getUserId())
+                .addParam("userId", userInfo.get("id"))
                 .addParam("email", userInfo.get("email"))
                 .addParam("phoneNo", userInfo.get("phoneNo"))
                 .addParam("notificationTypes", List.of("SMS", "PUSH", "EMAIL"))

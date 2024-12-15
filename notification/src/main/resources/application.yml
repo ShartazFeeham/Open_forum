@@ -12,12 +12,14 @@ spring:
     # Stream binding configuration
     stream:
       bindings:
-        generateNotificationsendNotification-in-0:
-          destination: send-notification
-          group: ${spring.application.name}
-        generateNotificationsendNotification-out-0:
-          destination: notifications-sent
-          group: ${spring.application.name}
+        # Binding #1 for getting notification input events
+        generateNotificationsendNotification-in-0: # Same as the function as defined
+          destination: send-notification # Exchange name
+          group: ${spring.application.name} # Queue name suffix (send-notification.notification}
+
+        # Binding #2 for publishing task complete events
+        notificationDelivered-out-0: # Same as the function as defined
+          destination: notification-delivered # Exchange name
 
   # RabbitMQ configuration
   rabbitmq:

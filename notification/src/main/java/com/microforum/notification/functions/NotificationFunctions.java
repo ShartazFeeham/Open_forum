@@ -4,11 +4,15 @@ import com.microforum.notification.models.dto.NotificationCreateDTO;
 import com.microforum.notification.models.entity.Notification;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
@@ -19,14 +23,19 @@ import java.util.function.Function;
 public class NotificationFunctions {
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationFunctions.class);
+    public static final String NOTIFICATION_DELIVERY_EXCHANGE = "notificationDelivered-out-0";
     private final AnalyzerFunctions analyzerFunctions;
     private final SenderFunctions senderFunctions;
     private static final Random random = new Random();
     private final ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor();
+    private final StreamBridge streamBridge;
 
-    public NotificationFunctions(AnalyzerFunctions analyzerFunctions, SenderFunctions senderFunctions) {
+    public NotificationFunctions(AnalyzerFunctions analyzerFunctions,
+                                 SenderFunctions senderFunctions,
+                                 StreamBridge streamBridge) {
         this.analyzerFunctions = analyzerFunctions;
         this.senderFunctions = senderFunctions;
+        this.streamBridge = streamBridge;
     }
 
     @Bean
@@ -44,6 +53,8 @@ public class NotificationFunctions {
 
     @Bean
     public Consumer<Notification> sendNotification() {
+        final List<Future<?>> futures = new ArrayList<>();
+
         return (notification) -> {
             notification.notificationTypes().forEach(type -> {
                 boolean allowed = analyzerFunctions.isSendAllowed().apply(notification, type);
@@ -55,9 +66,30 @@ public class NotificationFunctions {
                             case PUSH -> senderFunctions.sendPush().accept(notification);
                         }
                     });
+                    futures.add(futureTask);
                 }
             });
+
+            waitForAllNotificationsToBeSent(futures, notification);
+            publishNotificationsDeliveredEvent(notification);
         };
     }
 
+    private static void waitForAllNotificationsToBeSent(List<Future<?>> futures, Notification notification) {
+        for (Future<?> future : futures) {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        logger.info("All notifications were sent for userId: {}, and notificationId: {}", notification.userId(), notification.id());
+    }
+
+    private void publishNotificationsDeliveredEvent(Notification notification) {
+        streamBridge.send(NOTIFICATION_DELIVERY_EXCHANGE, notification);
+
+        logger.info("Published notification delivery event for userId: {}, and notificationId: {}",
+                notification.userId(), notification.id());
+    }
 }
