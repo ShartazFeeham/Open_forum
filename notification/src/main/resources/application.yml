@@ -1,30 +1,12 @@
-server:
-  port: 3400
-
 spring:
+  # Basic app configuration
   application:
     name: "notifications"
-  cloud:
-    # Functions integration
-    function:
-      definition: generateNotification|sendNotification
 
-    # Stream binding configuration
-    stream:
-      bindings:
-        # Binding #1 for getting notification input events
-        generateNotificationsendNotification-in-0: # Same as the function as defined
-          destination: send-notification # Exchange name
-          group: ${spring.application.name} # Queue name suffix (send-notification.notification}
+  # Config server configuration
+  config:
+    import: "optional:configserver:http://localhost:8888/"
 
-        # Binding #2 for publishing task complete events
-        notificationDelivered-out-0: # Same as the function as defined
-          destination: notification-delivered # Exchange name
-
-  # RabbitMQ configuration
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    connection-timeout: 10s
+  # Default active profile
+  profiles:
+    default: "dev"

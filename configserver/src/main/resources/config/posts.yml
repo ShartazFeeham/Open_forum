@@ -12,6 +12,29 @@ spring:
       - "posts-testing.yml"
       - "posts-prod.yml"
 
+  cloud:
+    # Functional api & stream config
+    function:
+      definition: handleDeliveredNotification
+    stream:
+      bindings:
+        # Consumer configuration for 'notification-delivered' exchange
+        handleDeliveredNotification-in-0:
+          destination: notification-delivered
+          group: ${spring.application.name}
+
+        # Publisher configuration for 'send-notification' exchange
+        notificationSender-out-0:
+          destination: send-notification
+
+  # RabbitMQ configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
+
 # Service registry config
 eureka:
   instance:
@@ -46,12 +69,6 @@ management:
       enabled: true
 
   # For tracing
-  otlp:
-    metrics:
-      export:
-        enabled: false
-        step: 1m
-        url: https://otlp.eu01.nr-data.net
   tracing:
     sampling:
       probability: 1.0f
