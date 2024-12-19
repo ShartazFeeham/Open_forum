@@ -37,7 +37,7 @@ docker build -t feeham/micro_forum:config-server-1.2 .
 cd ../
 ```
 ```shell
-docker push feeham/micro_forum:config-server-1.0
+docker push feeham/micro_forum:config-server-1.2
 ```
 #### Discovery server
 ```shell

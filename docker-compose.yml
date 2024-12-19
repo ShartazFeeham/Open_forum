@@ -120,10 +120,45 @@ services:
     hostname: rabbitmq
 
   config-server:
-    image: feeham/micro_forum:config-server-1.0
+    image: feeham/micro_forum:config-server-1.2
     container_name: config-server
     ports:
       - "8888:8888"
+
+  discovery-server:
+    image: feeham/micro_forum:discovery-server-1.0
+    container_name: discovery-server
+    ports:
+      - "7777:7777"
+    depends_on:
+      - config-server
+
+  posts:
+    image: feeham/micro_forum:posts-1.0
+    container_name: posts
+    ports:
+      - "3100:3100"
+    depends_on:
+      - config-server
+
+  notifications:
+    image: feeham/micro_forum:notifications-1.0
+    container_name: notifications
+    ports:
+      - "3400:3400"
+    depends_on:
+      - config-server
+
+  gateway:
+    image: feeham/micro_forum:gateway-1.0
+    container_name: gateway
+    ports:
+      - "9999:9999"
+    depends_on:
+      - config-server
+      - discovery-server
+      - posts
+      - notifications
 
 # Defines custom networks.
 networks: # Defines custom networks.
