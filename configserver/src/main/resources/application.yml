@@ -1,3 +1,6 @@
+server:
+  port: 8888
+
 spring:
   application:
     name: "configserver"
@@ -8,9 +11,6 @@ spring:
       server:
         native:
           search-locations: "classpath:/config"
-
-server:
-  port: 8888
 
 encrypt:
   key: "JDF68DF74J54JN3443989GF8G9F8G94N3KN54"

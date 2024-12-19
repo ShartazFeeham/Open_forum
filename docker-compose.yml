@@ -119,6 +119,12 @@ services:
       RABBITMQ_DEFAULT_PASS: guest
     hostname: rabbitmq
 
+  config-server:
+    image: feeham/micro_forum:config-server-1.0
+    container_name: config-server
+    ports:
+      - "8888:8888"
+
 # Defines custom networks.
 networks: # Defines custom networks.
   elastic:
@@ -129,3 +135,4 @@ volumes: # Defines named volumes for data persistence.
     driver: local  # Specifies the local driver for volume storage.
   post-service-pg-db_local_data:
   pgadmin-data:
+

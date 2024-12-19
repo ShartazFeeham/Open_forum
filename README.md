@@ -28,3 +28,76 @@
 All the services has monitoring enabled, see config servers from below:
 - Config server actuator monitoring URL(JSON): http://localhost:8888/actuator/metrics
 - Config server actuator monitoring URL(PROMETHEUS): http://localhost:8888/actuator/prometheus
+
+## Docker image build and push commands
+#### Config server
+```shell
+cd .\configserver\
+docker build -t feeham/micro_forum:config-server-1.2 .
+cd ../
+```
+```shell
+docker push feeham/micro_forum:config-server-1.0
+```
+#### Discovery server
+```shell
+cd .\discoveryserver\
+docker build -t feeham/micro_forum:discovery-server-1.0 .
+cd ../
+```
+```shell
+docker push feeham/micro_forum:discovery-server-1.0
+```
+
+#### Posts service
+```shell
+cd .\posts\
+docker build -t feeham/micro_forum:posts-1.0 .
+cd ../
+```
+```shell
+docker push feeham/micro_forum:posts-1.0
+```
+
+#### Notification service
+```shell
+cd .\notification\
+docker build -t feeham/micro_forum:notifications-1.0 .
+cd ../
+```
+```shell
+docker push feeham/micro_forum:notifications-1.0
+```
+
+#### API Gateway
+```shell
+cd .\gateway\
+docker build -t feeham/micro_forum:gateway-1.0 .
+cd ../
+```
+```shell
+docker push feeham/micro_forum:gateway-1.0
+```
+### All together
+```shell
+cd .\configserver\
+docker build -t feeham/micro_forum:config-server-1.2 .
+cd ../
+cd .\discoveryserver\
+docker build -t feeham/micro_forum:discovery-server-1.0 .
+cd ../
+cd .\posts\
+docker build -t feeham/micro_forum:posts-1.0 .
+cd ../
+cd .\notification\
+docker build -t feeham/micro_forum:notifications-1.0 .
+cd ../
+cd .\gateway\
+docker build -t feeham/micro_forum:gateway-1.0 .
+cd ../
+docker push feeham/micro_forum:config-server-1.0
+docker push feeham/micro_forum:discovery-server-1.0
+docker push feeham/micro_forum:posts-1.0
+docker push feeham/micro_forum:notifications-1.0
+docker push feeham/micro_forum:gateway-1.0
+```
