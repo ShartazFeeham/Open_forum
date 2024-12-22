@@ -6,7 +6,3 @@ spring:
   # Config server configuration
   config:
     import: "optional:configserver:http://localhost:8888/"
-
-  # Default active profile
-  profiles:
-    default: "dev"
