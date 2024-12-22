@@ -1,0 +1,74 @@
+version: "3.8"
+name: "micro-forum"
+services:
+
+  # Micro forum services
+  config-server:
+    extends:
+      file: docker-micro-forum-configs.yml
+      service: micro_forum_config-server
+  discovery-server:
+    extends:
+      file: docker-micro-forum-configs.yml
+      service: micro_forum_discovery-server
+  posts:
+    extends:
+      file: docker-micro-forum-configs.yml
+      service: micro_forum_posts
+  notifications:
+    extends:
+      file: docker-micro-forum-configs.yml
+      service: micro_forum_notifications
+  gateway:
+    extends:
+      file: docker-micro-forum-configs.yml
+      service: micro_forum_gateway
+
+  # Storages
+  post-service-pg-db:
+    extends:
+      file: docker-storage-configs.yml
+      service: storage-post-service-pg-db
+  pg-admin-postgres-ui:
+    extends:
+      file: docker-storage-configs.yml
+      service: storage-pg-admin-postgres-ui
+
+  # Observability
+  elasticsearch_for_logs:
+    extends:
+      file: docker-observability-configs.yml
+      service: observability_elasticsearch_for_logs
+  kibana:
+    extends:
+      file: docker-observability-configs.yml
+      service: observability_kibana
+  logstash:
+    extends:
+      file: docker-observability-configs.yml
+      service: observability_logstash
+  filebeat:
+    extends:
+      file: docker-observability-configs.yml
+      service: observability_filebeat
+  prometheus:
+    extends:
+      file: docker-observability-configs.yml
+      service: observability_prometheus
+  grafana:
+    extends:
+      file: docker-observability-configs.yml
+      service: observability_grafana
+
+  # Other external services
+  rabbitmq:
+    extends:
+      file: docker-other-external-configs.yml
+      service: other_external_rabbitmq
+
+volumes:
+  elasticsearch_data:
+    driver: local
+  post-service-pg-db_local_data:
+  pgadmin-data:
+

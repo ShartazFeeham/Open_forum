@@ -6,7 +6,7 @@
 
     <!-- ***************** Define a property for the paths to store logs **************** -->
     <property name="APPLICATION_NAME" value="posts" />
-    <property name="LOGS_PATH_PREFIX" value="logs/" />
+    <property name="LOGS_PATH_PREFIX" value="observability/logging/logs/" />
     <springProperty scope="context" name="springAppName" source="spring.application.name"/>
 
     <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">

@@ -12,6 +12,52 @@ spring:
       - "posts-testing.yml"
       - "posts-prod.yml"
 
+  cloud:
+    # Functional api & stream config
+    function:
+      definition: handleDeliveredNotification
+    stream:
+      bindings:
+        # Consumer configuration for 'notification-delivered' exchange
+        handleDeliveredNotification-in-0:
+          destination: notification-delivered
+          group: ${spring.application.name}
+
+        # Publisher configuration for 'send-notification' exchange
+        notificationSender-out-0:
+          destination: send-notification
+
+  # Default datasource configuration
+  datasource:
+    url: jdbc:postgresql://post-service-pg-db:5432/post-service-pg-db
+    username: post-service-pg-db_user
+    password: post-service-pg-db_password
+
+    # Connection pool configuration
+    hikari:
+      connection-timeout: 600000 # 10 minutes
+      maximum-pool-size: 3       # Connection limit
+      auto-commit: false         # Let us handle transactions
+      idle-timeout: 1800000      # 30 minutes
+      minimum-idle: 2            # Minimum number of idle connections in the pool
+
+  # JPA configuration
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+  # RabbitMQ configuration
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    connection-timeout: 10s
+
 # Service registry config
 eureka:
   instance:
@@ -40,24 +86,24 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: '*'
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   info:
     env:
       enabled: true
-
   # For tracing
-  otlp:
-    metrics:
-      export:
-        enabled: false
-        step: 1m
-        url: https://otlp.eu01.nr-data.net
   tracing:
     sampling:
       probability: 1.0f
-
   # Enable shutdown endpoint
   endpoint:
+    health:
+      probes:
+        enabled: true
     shutdown:
       enabled: true
 

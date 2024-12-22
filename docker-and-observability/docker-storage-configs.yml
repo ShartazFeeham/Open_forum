@@ -1,0 +1,31 @@
+version: '3'
+services:
+  # Postgres database for post-service
+  storage-post-service-pg-db:
+    image: postgres:14.15-alpine3.20
+    container_name: post-service-pg-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: post-service-pg-db
+      POSTGRES_USER: post-service-pg-db_user
+      POSTGRES_PASSWORD: post-service-pg-db_password
+    volumes:
+      - post-service-pg-db_local_data:/var/lib/postgresql/data
+
+  # PG Admin for postgres database UI
+  storage-pg-admin-postgres-ui:
+    image: dpage/pgadmin4
+    container_name: pgadmin4_container
+    restart: always
+    ports:
+      - "8088:80"
+    depends_on:
+      - post-service-pg-db
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+

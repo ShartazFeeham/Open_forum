@@ -1,0 +1,75 @@
+version: "3.8"
+name: "micro-forum"
+services:
+
+  observability_elasticsearch_for_logs:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
+    container_name: elasticsearch
+    environment:
+      - bootstrap.memory_lock=true  # Enables memory locking for performance and stability.
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Configures the JVM heap size for Elasticsearch.
+      - "discovery.type=single-node"  # Configures Elasticsearch to run in single-node mode.
+      - xpack.security.enabled=false  # Disables the security features of X-Pack for Elasticsearch.
+    ports:
+      - "9200:9200"
+    volumes: # Mounts a volume to persist Elasticsearch data.
+      - elasticsearch_data:/usr/share/elasticsearch/data  # Mounts the named volume for data persistence.
+
+  observability_kibana:
+    image: docker.elastic.co/kibana/kibana:8.3.3
+    container_name: kibana
+    ports:
+      - "5601:5601"  # Maps port 5601 on the host to port 5601 on the container for accessing Kibana UI.
+    environment:
+      ELASTICSEARCH_URL: http://elasticsearch:9200  # Configures Kibana to connect to Elasticsearch at the given URL.
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'  # Specifies the URL for Kibana to connect to Elasticsearch.
+    depends_on: # Ensures Kibana starts after Elasticsearch.
+      - elasticsearch_for_logs
+
+  observability_logstash:
+    image: docker.elastic.co/logstash/logstash:8.3.3
+    container_name: logstash
+    volumes: # Mounts volumes for configuration and pipeline data.
+      - ./observability/logging/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro  # Mounts the configuration file in read-only mode.
+      - ./observability/logging/config/pipeline:/usr/share/logstash/pipeline:ro  # Mounts the pipeline directory in read-only mode.
+    ports: # Maps host ports to container ports for Logstash.
+      - "5044:5044"  # Maps port 5044 for Beats input.
+      - "5000:5000/tcp"  # Maps port 5000 for TCP input.
+      - "5000:5000/udp"  # Maps port 5000 for UDP input.
+      - "9600:9600"  # Maps port 9600 for Logstash monitoring API.
+    environment: # Sets environment variables for Logstash.
+      LS_JAVA_OPTS: "-Xmx256m -Xms256m"  # Configures the JVM heap size for Logstash.
+    depends_on: # Ensures Logstash starts after Elasticsearch.
+      - elasticsearch_for_logs
+
+  observability_filebeat:
+    image: docker.elastic.co/beats/filebeat:8.3.3
+    container_name: filebeat
+    user: root  # Run as root if necessary for file access
+    command: [ "filebeat", "-e", "--strict.perms=false" ]
+    volumes:
+      - ./observability/logging/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro  # Mount your Filebeat config
+      # Posts service log location : container storage location where to copy logs
+      - ./observability/logging/logs/posts:/var/logs/micro-forum/posts_service:ro
+      - ./observability/logging/logs/gateway:/var/logs/micro-forum/gateway_service:ro
+      # Add more service here
+    depends_on:
+      - logstash  # Ensure Filebeat starts after Logstash
+
+  # Monitoring
+  observability_prometheus:
+    image: prom/prometheus:v2.44.0
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./observability/monitoring/config/prometheus.yml:/etc/prometheus/prometheus.yml
+
+  observability_grafana:
+    image: grafana/grafana:9.5.2
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    volumes:
+      - ./observability/monitoring/config/datasources:/etc/grafana/provisioning/datasources
