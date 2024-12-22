@@ -2,13 +2,19 @@ version: "3.8"
 services:
 
   config-server:
-    image: feeham/micro_forum:config-server-1.4
+    image: feeham/micro_forum:config-server-1.7
     container_name: config-server
     ports:
       - "8888:8888"
     extends:
       file: common-config.yml
       service: common-config-initial
+    healthcheck:
+      test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   discovery-server:
     image: feeham/micro_forum:discovery-server-1.3
@@ -18,6 +24,12 @@ services:
     extends:
       file: common-config.yml
       service: common-config-after-config-server
+    healthcheck:
+      test: "curl --fail --silent localhost:7777/actuator/health/readiness | grep UP || exit 1"
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   posts:
     image: feeham/micro_forum:posts-1.4

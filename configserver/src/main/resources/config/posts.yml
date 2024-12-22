@@ -86,18 +86,24 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: '*'
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
   info:
     env:
       enabled: true
-
   # For tracing
   tracing:
     sampling:
       probability: 1.0f
-
   # Enable shutdown endpoint
   endpoint:
+    health:
+      probes:
+        enabled: true
     shutdown:
       enabled: true
 

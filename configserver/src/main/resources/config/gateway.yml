@@ -54,7 +54,13 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: '*'
+  health:
+    readiness-state:
+      enabled: true
+    liveness-state:
+      enabled: true
+
   info:
     env:
       enabled: true
@@ -74,6 +80,9 @@ management:
   endpoint:
     gateway:
       access: read_only
+    health:
+      probes:
+        enabled: true
 
 # Enable debug logging
 logging:
