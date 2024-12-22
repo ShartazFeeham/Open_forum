@@ -1,95 +1,8 @@
 version: "3.8"
+name: "micro-forum"
 services:
 
-  config-server:
-    image: feeham/micro_forum:config-server-1.7
-    container_name: config-server
-    ports:
-      - "8888:8888"
-    extends:
-      file: common-config.yml
-      service: common-config-initial
-    healthcheck:
-      test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 20
-      start_period: 10s
-
-  discovery-server:
-    image: feeham/micro_forum:discovery-server-1.3
-    container_name: discovery-server
-    ports:
-      - "7777:7777"
-    extends:
-      file: common-config.yml
-      service: common-config-after-config-server
-    healthcheck:
-      test: "curl --fail --silent localhost:7777/actuator/health/readiness | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 20
-      start_period: 10s
-
-  posts:
-    image: feeham/micro_forum:posts-1.4
-    container_name: posts
-    ports:
-      - "3100:3100"
-    depends_on:
-      - post-service-pg-db
-    extends:
-      file: common-config.yml
-      service: common-config-after-discovery-server
-
-  notifications:
-    image: feeham/micro_forum:notifications-1.0
-    container_name: notifications
-    ports:
-      - "3400:3400"
-    extends:
-      file: common-config.yml
-      service: common-config-after-discovery-server
-
-  gateway:
-    image: feeham/micro_forum:gateway-1.0
-    container_name: gateway
-    ports:
-      - "9999:9999"
-    extends:
-      file: common-config.yml
-      service: common-config-after-discovery-server
-
-  # DATABASES
-  # Postgres database for post-service
-  post-service-pg-db:
-    image: postgres:14.15-alpine3.20
-    container_name: post-service-pg-db
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      POSTGRES_DB: post-service-pg-db
-      POSTGRES_USER: post-service-pg-db_user
-      POSTGRES_PASSWORD: post-service-pg-db_password
-    volumes:
-      - post-service-pg-db_local_data:/var/lib/postgresql/data
-  # PG Admin for postgres database UI
-  pg-admin-postgres-ui:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
-    restart: always
-    ports:
-      - "8088:80"
-    depends_on:
-      - post-service-pg-db
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
-
-  elasticsearch_for_logs:
+  observability_elasticsearch_for_logs:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
     container_name: elasticsearch
     environment:
@@ -101,10 +14,8 @@ services:
       - "9200:9200"
     volumes: # Mounts a volume to persist Elasticsearch data.
       - elasticsearch_data:/usr/share/elasticsearch/data  # Mounts the named volume for data persistence.
-    networks:
-      - elastic
 
-  kibana:
+  observability_kibana:
     image: docker.elastic.co/kibana/kibana:8.3.3
     container_name: kibana
     ports:
@@ -114,10 +25,8 @@ services:
       ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'  # Specifies the URL for Kibana to connect to Elasticsearch.
     depends_on: # Ensures Kibana starts after Elasticsearch.
       - elasticsearch_for_logs
-    networks:
-      - elastic
 
-  logstash:
+  observability_logstash:
     image: docker.elastic.co/logstash/logstash:8.3.3
     container_name: logstash
     volumes: # Mounts volumes for configuration and pipeline data.
@@ -130,12 +39,10 @@ services:
       - "9600:9600"  # Maps port 9600 for Logstash monitoring API.
     environment: # Sets environment variables for Logstash.
       LS_JAVA_OPTS: "-Xmx256m -Xms256m"  # Configures the JVM heap size for Logstash.
-    networks:
-      - elastic
     depends_on: # Ensures Logstash starts after Elasticsearch.
       - elasticsearch_for_logs
 
-  filebeat:
+  observability_filebeat:
     image: docker.elastic.co/beats/filebeat:8.3.3
     container_name: filebeat
     user: root  # Run as root if necessary for file access
@@ -146,13 +53,11 @@ services:
       - ./observability/logging/logs/posts:/var/logs/micro-forum/posts_service:ro
       - ./observability/logging/logs/gateway:/var/logs/micro-forum/gateway_service:ro
       # Add more service here
-    networks:
-      - elastic
     depends_on:
       - logstash  # Ensure Filebeat starts after Logstash
 
   # Monitoring
-  prometheus:
+  observability_prometheus:
     image: prom/prometheus:v2.44.0
     container_name: prometheus
     ports:
@@ -160,7 +65,7 @@ services:
     volumes:
       - ./observability/monitoring/config/prometheus.yml:/etc/prometheus/prometheus.yml
 
-  grafana:
+  observability_grafana:
     image: grafana/grafana:9.5.2
     container_name: grafana
     ports:
@@ -168,26 +73,3 @@ services:
     restart: unless-stopped
     volumes:
       - ./observability/monitoring/config/datasources:/etc/grafana/provisioning/datasources
-
-  rabbitmq:
-    image: rabbitmq:3-management
-    container_name: rabbitmq
-    ports:
-      - "5672:5672"   # Main port for RabbitMQ (AMQP protocol)
-      - "15672:15672" # Port for RabbitMQ Management Plugin (web UI)
-    environment:
-      RABBITMQ_DEFAULT_USER: guest
-      RABBITMQ_DEFAULT_PASS: guest
-    hostname: rabbitmq
-
-# Defines custom networks.
-networks: # Defines custom networks.
-  elastic:
-    driver: bridge  # Specifies the bridge driver for creating an isolated network.
-
-volumes: # Defines named volumes for data persistence.
-  elasticsearch_data:
-    driver: local  # Specifies the local driver for volume storage.
-  post-service-pg-db_local_data:
-  pgadmin-data:
-
