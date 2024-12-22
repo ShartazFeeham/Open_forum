@@ -1,6 +1,53 @@
 version: "3.8"
 services:
 
+  config-server:
+    image: feeham/micro_forum:config-server-1.4
+    container_name: config-server
+    ports:
+      - "8888:8888"
+    extends:
+      file: common-config.yml
+      service: common-config-initial
+
+  discovery-server:
+    image: feeham/micro_forum:discovery-server-1.3
+    container_name: discovery-server
+    ports:
+      - "7777:7777"
+    extends:
+      file: common-config.yml
+      service: common-config-after-config-server
+
+  posts:
+    image: feeham/micro_forum:posts-1.4
+    container_name: posts
+    ports:
+      - "3100:3100"
+    depends_on:
+      - post-service-pg-db
+    extends:
+      file: common-config.yml
+      service: common-config-after-discovery-server
+
+  notifications:
+    image: feeham/micro_forum:notifications-1.0
+    container_name: notifications
+    ports:
+      - "3400:3400"
+    extends:
+      file: common-config.yml
+      service: common-config-after-discovery-server
+
+  gateway:
+    image: feeham/micro_forum:gateway-1.0
+    container_name: gateway
+    ports:
+      - "9999:9999"
+    extends:
+      file: common-config.yml
+      service: common-config-after-discovery-server
+
   # DATABASES
   # Postgres database for post-service
   post-service-pg-db:
@@ -120,61 +167,6 @@ services:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
     hostname: rabbitmq
-
-  config-server:
-    image: feeham/micro_forum:config-server-1.4
-    container_name: config-server
-    ports:
-      - "8888:8888"
-
-  discovery-server:
-    image: feeham/micro_forum:discovery-server-1.3
-    container_name: discovery-server
-    ports:
-      - "7777:7777"
-    depends_on:
-      - "config-server"
-    environment:
-      SPRING_CONFIG_IMPORT: "optional:configserver:http://config-server:8888/"
-
-  posts:
-    image: feeham/micro_forum:posts-1.3
-    container_name: posts
-    ports:
-      - "3100:3100"
-    depends_on:
-      - config-server
-      - discovery-server
-      - post-service-pg-db
-    environment:
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:7777/eureka/
-
-  notifications:
-    image: feeham/micro_forum:notifications-1.0
-    container_name: notifications
-    ports:
-      - "3400:3400"
-    depends_on:
-      - config-server
-      - discovery-server
-    environment:
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:7777/eureka/
-
-  gateway:
-    image: feeham/micro_forum:gateway-1.0
-    container_name: gateway
-    ports:
-      - "9999:9999"
-    depends_on:
-      - config-server
-      - discovery-server
-      - posts
-      - notifications
-    environment:
-      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
-      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:7777/eureka/
 
 # Defines custom networks.
 networks: # Defines custom networks.

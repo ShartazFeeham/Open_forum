@@ -1,0 +1,34 @@
+services:
+  post-service-pg-db:
+    image: postgres:14.15-alpine3.20
+    container_name: post-service-pg-db
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: post-service-pg-db
+      POSTGRES_USER: post-service-pg-db_user
+      POSTGRES_PASSWORD: post-service-pg-db_password
+    volumes:
+      - post-service-pg-db_local_data:/var/lib/postgresql/data
+  common-config-initial:
+    deploy:
+      resources:
+        limits:
+          memory: 700m
+
+  common-config-after-config-server:
+    extends:
+      service: common-config-initial
+    depends_on:
+      - config-server
+    environment:
+      SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
+
+  common-config-after-discovery-server:
+    extends:
+      service: common-config-after-config-server
+    depends_on:
+      - discovery-server
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:7777/eureka/
