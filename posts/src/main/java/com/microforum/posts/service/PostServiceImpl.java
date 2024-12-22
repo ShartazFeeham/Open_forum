@@ -8,6 +8,7 @@ import com.microforum.posts.models.DynamicModel;
 import com.microforum.posts.models.UpdatePostDTO;
 import com.microforum.posts.repository.PostRepository;
 import com.microforum.posts.service.interfaces.PostService;
+import com.microforum.posts.utility.ThreadUtil;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -28,6 +29,7 @@ public class PostServiceImpl implements PostService {
     private final TagServiceImpl tagService;
     private final Logger logger = LoggerFactory.getLogger(PostServiceImpl.class);
     private final StreamBridge streamBridge;
+    private final ThreadUtil threadUtil;
 
     /**
      * Create a new post in the database
@@ -219,10 +221,18 @@ public class PostServiceImpl implements PostService {
     private void sendNotificationToFollowers(Post post) {
         var followersInfo = getFollowersInfo(post.getUserId());
         followersInfo.forEach(userInfo -> {
-            var notification = buildNotification(post, userInfo);
-            logger.info("Sending notification: {} for post {}", notification, post);
-            boolean result = streamBridge.send(NOTIFICATION_SENDER_EXCHANGE, notification);
-            logger.info("Post notification request successfully triggered ? : {}", result);
+            threadUtil.executeWithVirtualThreadWithoutException(() ->
+            {
+                var notification = buildNotification(post, userInfo);
+                logger.info("Sending notification: {} for post {}", notification, post);
+                boolean result = streamBridge.send(NOTIFICATION_SENDER_EXCHANGE, notification);
+            }, () ->
+            {
+                logger.info("Post notification request successfully triggered.");
+            }, () ->
+            {
+                logger.info("Post notification request failed.");
+            });
         });
     }
 
