@@ -29,7 +29,7 @@ spring:
 
   # Default datasource configuration
   datasource:
-    url: jdbc:postgresql://post-service-pg-db:5432/post-service-pg-db
+    url: jdbc:postgresql://localhost:5432/post-service-pg-db
     username: post-service-pg-db_user
     password: post-service-pg-db_password
 
