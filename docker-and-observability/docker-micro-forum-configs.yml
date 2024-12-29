@@ -1,12 +1,12 @@
 version: "3.8"
 services:
   micro_forum_config-server:
-    image: feeham/micro_forum:config-server-1.7
+    image: feeham/micro_forum:config-server-1.10
     container_name: config-server
     ports:
       - "8888:8888"
     extends:
-      file: docker-common-configs.yml
+      file: docker-general-configs.yml
       service: common-config-initial
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
@@ -21,7 +21,7 @@ services:
     ports:
       - "7777:7777"
     extends:
-      file: docker-common-configs.yml
+      file: docker-general-configs.yml
       service: common-config-after-config-server
     healthcheck:
       test: "curl --fail --silent localhost:7777/actuator/health/readiness | grep UP || exit 1"
@@ -35,10 +35,12 @@ services:
     container_name: posts
     ports:
       - "3100:3100"
+    environment:
+      SPRING_PROFILES_ACTIVE: "testing"
     depends_on:
       - post-service-pg-db
     extends:
-      file: docker-common-configs.yml
+      file: docker-general-configs.yml
       service: common-config-after-discovery-server
 
   micro_forum_notifications:
@@ -47,14 +49,16 @@ services:
     ports:
       - "3400:3400"
     extends:
-      file: docker-common-configs.yml
+      file: docker-general-configs.yml
       service: common-config-after-discovery-server
 
   micro_forum_gateway:
-    image: feeham/micro_forum:gateway-1.0
+    image: feeham/micro_forum:gateway-1.3
     container_name: gateway
     ports:
       - "9999:9999"
+    environment:
+      SPRING_PROFILES_ACTIVE: "testing"
     extends:
-      file: docker-common-configs.yml
+      file: docker-general-configs.yml
       service: common-config-after-discovery-server

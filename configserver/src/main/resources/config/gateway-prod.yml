@@ -1,0 +1,11 @@
+# Profile config
+spring:
+  config:
+    activate:
+      on-profile: "prod"
+
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://keycloak:8080/realms/master/protocol/openid-connect/certs"
