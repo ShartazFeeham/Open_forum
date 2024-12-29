@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   micro_forum_config-server:
-    image: feeham/micro_forum:config-server-1.7
+    image: feeham/micro_forum:config-server-1.8
     container_name: config-server
     ports:
       - "8888:8888"
@@ -35,6 +35,8 @@ services:
     container_name: posts
     ports:
       - "3100:3100"
+    environment:
+      SPRING_PROFILES_ACTIVE: "testing"
     depends_on:
       - post-service-pg-db
     extends:
@@ -51,7 +53,7 @@ services:
       service: common-config-after-discovery-server
 
   micro_forum_gateway:
-    image: feeham/micro_forum:gateway-1.0
+    image: feeham/micro_forum:gateway-1.2
     container_name: gateway
     ports:
       - "9999:9999"
