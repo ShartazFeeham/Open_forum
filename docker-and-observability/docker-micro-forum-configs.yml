@@ -1,7 +1,7 @@
 version: "3.8"
 services:
   micro_forum_config-server:
-    image: feeham/micro_forum:config-server-1.8
+    image: feeham/micro_forum:config-server-1.10
     container_name: config-server
     ports:
       - "8888:8888"
@@ -53,10 +53,12 @@ services:
       service: common-config-after-discovery-server
 
   micro_forum_gateway:
-    image: feeham/micro_forum:gateway-1.2
+    image: feeham/micro_forum:gateway-1.3
     container_name: gateway
     ports:
       - "9999:9999"
+    environment:
+      SPRING_PROFILES_ACTIVE: "testing"
     extends:
       file: docker-general-configs.yml
       service: common-config-after-discovery-server

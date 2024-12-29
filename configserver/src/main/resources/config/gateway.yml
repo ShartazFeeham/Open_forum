@@ -3,6 +3,11 @@ server:
 
 spring:
   # Connect with service registry and locate services
+  config:
+    import:
+      - "gateway-dev.yml"
+      - "gateway-testing.yml"
+      - "gateway-prod.yml"
   reactor:
     # To let context propagate across asynchronous executions, thread boundaries, and even across different services (Security
     # credentials, Correlation ID, tracing requests across services, locale settings for internationalization
@@ -20,6 +25,11 @@ spring:
         connect-timeout: 1000
         # Request processing timeout
         response-timeout: 2s
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: "http://localhost:7080/realms/master/protocol/openid-connect/certs"
 
 # Eureka configurations
 eureka:
