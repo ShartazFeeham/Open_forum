@@ -1,4 +1,4 @@
-# MicroForum
+# OpenForum [UNDER DEVELOPMENT]
 
 ## Config server
 - URL: http://localhost:8888
