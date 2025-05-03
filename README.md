@@ -1,9 +1,9 @@
 # OpenForum [UNDER DEVELOPMENT]
 A decentralized Q&A and discussion platform inspired by StackOverflow & X (twitter), built with a scalable microservices architecture. Supports threaded discussions, voting, messaging, reviews, and real-time notifications.
 ### System design diagram
-![system design diagram p1.png](resources%2Fsystem%20design%20diagram%20p1.png)
-![system design diagram p2.png](resources%2Fsystem%20design%20diagram%20p2.png)
-![system design diagram p3.png](resources%2Fsystem%20design%20diagram%20p3.png)
+![Core services design](resources%2Fsystem%20design%20diagram%20p1.png)
+![Infrastructure design](resources%2Fsystem%20design%20diagram%20p2.png)
+![Inter service communication diagram](resources%2Fsystem%20design%20diagram%20p3.png)
 
 ## Config server
 - URL: http://localhost:8888
