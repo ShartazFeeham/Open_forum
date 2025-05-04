@@ -30,8 +30,8 @@ services:
     image: docker.elastic.co/logstash/logstash:8.3.3
     container_name: logstash
     volumes: # Mounts volumes for configuration and pipeline data.
-      - ./observability/logging/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro  # Mounts the configuration file in read-only mode.
-      - ./observability/logging/config/pipeline:/usr/share/logstash/pipeline:ro  # Mounts the pipeline directory in read-only mode.
+      - ./../observability/logging/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro  # Mounts the configuration file in read-only mode.
+      - ./../observability/logging/config/pipeline:/usr/share/logstash/pipeline:ro  # Mounts the pipeline directory in read-only mode.
     ports: # Maps host ports to container ports for Logstash.
       - "5044:5044"  # Maps port 5044 for Beats input.
       - "5000:5000/tcp"  # Maps port 5000 for TCP input.
@@ -48,10 +48,10 @@ services:
     user: root  # Run as root if necessary for file access
     command: [ "filebeat", "-e", "--strict.perms=false" ]
     volumes:
-      - ./observability/logging/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro  # Mount your Filebeat config
+      - ./../observability/logging/config/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro  # Mount your Filebeat config
       # Posts service log location : container storage location where to copy logs
-      - ./observability/logging/logs/posts:/var/logs/micro-forum/posts_service:ro
-      - ./observability/logging/logs/gateway:/var/logs/micro-forum/gateway_service:ro
+      - ./../observability/logging/logs/posts:/var/logs/micro-forum/posts_service:ro
+      - ./../observability/logging/logs/gateway:/var/logs/micro-forum/gateway_service:ro
       # Add more service here
     depends_on:
       - logstash  # Ensure Filebeat starts after Logstash
@@ -63,7 +63,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./observability/monitoring/config/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./../observability/monitoring/config/prometheus.yml:/etc/prometheus/prometheus.yml
 
   observability_grafana:
     image: grafana/grafana:9.5.2
@@ -72,4 +72,4 @@ services:
       - "3000:3000"
     restart: unless-stopped
     volumes:
-      - ./observability/monitoring/config/datasources:/etc/grafana/provisioning/datasources
+      - ./../observability/monitoring/config/datasources:/etc/grafana/provisioning/datasources
