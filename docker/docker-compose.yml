@@ -1,8 +1,7 @@
 version: "3.8"
-name: "micro-forum"
+name: "open-forum"
 services:
-
-  # Micro forum services
+  # Open forum services
   config-server:
     extends:
       file: docker-micro-forum-configs.yml
