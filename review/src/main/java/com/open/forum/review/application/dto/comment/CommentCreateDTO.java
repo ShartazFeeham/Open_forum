@@ -1,4 +1,4 @@
-package com.open.forum.review.application.dto;
+package com.open.forum.review.application.dto.comment;
 
 import com.open.forum.review.shared.validator.ObjectValidator;
 import jakarta.validation.constraints.NotEmpty;
