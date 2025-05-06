@@ -13,8 +13,9 @@ public class Reaction implements ObjectValidator {
     private Long commentId;
     @NotNull
     private Long userId;
+    private ReactionStatus reactionStatus;
     private ReactionType reactionType;
-    private ZonedDateTime reactionZoneDateTime;
+    private ZonedDateTime createdAt;
 
     @Override
     public boolean validate() {

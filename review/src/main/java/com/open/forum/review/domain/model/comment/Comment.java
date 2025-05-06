@@ -3,10 +3,7 @@ package com.open.forum.review.domain.model.comment;
 import com.open.forum.review.shared.validator.ObjectValidator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -15,17 +12,17 @@ import java.util.List;
  * Represents a comment in the review system.
  * This class contains information about the comment, including its ID, post ID, user ID, status, and creation date.
  */
-@Getter @Setter @Builder @AllArgsConstructor
+@Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor
 public class Comment implements ObjectValidator {
-    private final Long commentId;
-    private final Long postId;
+    private Long commentId;
+    private Long postId;
     @NotNull @Positive
-    private final Long userId;
-    private final boolean isReply;
-    private final Long parentCommentId;
+    private Long userId;
+    private boolean isReply;
+    private Long parentCommentId;
     List<CommentContent> contents;
-    private final CommentStatus status;
-    private final ZonedDateTime createdAt;
+    private CommentStatus status;
+    private ZonedDateTime createdAt;
 
     @Override
     public boolean validate() {
