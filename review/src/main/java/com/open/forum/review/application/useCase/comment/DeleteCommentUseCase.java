@@ -1,6 +1,6 @@
 package com.open.forum.review.application.useCase.comment;
 
-public interface CommentDeleteUseCase {
+public interface DeleteCommentUseCase {
     /**
      * Deletes a comment by its ID.
      *
