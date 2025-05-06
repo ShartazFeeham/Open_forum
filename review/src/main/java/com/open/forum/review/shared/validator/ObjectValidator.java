@@ -1,8 +1,9 @@
 package com.open.forum.review.shared.validator;
 
-import com.open.forum.review.shared.exception.InvalidEntityException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.function.Predicate;
 
 /**
  * This interface defines a contract for validating objects.
@@ -11,12 +12,15 @@ import org.slf4j.LoggerFactory;
 public interface ObjectValidator {
 
     Logger logger = LoggerFactory.getLogger(ObjectValidator.class);
+
     /**
      * Validates the object.
      *
      * @return true if the object is valid, false otherwise
      */
-    boolean validate();
+    default boolean validate() {
+        return true;
+    }
 
     /**
      * Returns the name of the entity being validated.
@@ -24,15 +28,4 @@ public interface ObjectValidator {
      * @return the name of the entity
      */
     String getEntityName();
-
-    /**
-     * Validates the object and throws an exception if validation fails.
-     */
-    default void validateOrThrow() {
-        if (!validate()) {
-            final var exception = new InvalidEntityException("The object of " + getEntityName() + " is invalid.");
-            logger.error("Validation failed for {}", getEntityName(), exception);
-            throw exception;
-        }
-    }
 }
