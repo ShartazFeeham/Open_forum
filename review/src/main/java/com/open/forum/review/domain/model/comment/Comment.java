@@ -1,6 +1,6 @@
 package com.open.forum.review.domain.model.comment;
 
-import com.open.forum.review.domain.validator.ObjectValidator;
+import com.open.forum.review.shared.validator.ObjectValidator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.AllArgsConstructor;

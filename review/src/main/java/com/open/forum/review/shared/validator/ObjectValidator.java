@@ -1,4 +1,4 @@
-package com.open.forum.review.domain.validator;
+package com.open.forum.review.shared.validator;
 
 import com.open.forum.review.shared.exception.InvalidEntityException;
 import org.slf4j.Logger;
