@@ -9,6 +9,7 @@ import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public interface ReactionRepository {
 
@@ -23,9 +24,9 @@ public interface ReactionRepository {
      * Finds a reaction by its ID.
      *
      * @param reactionId the ID of the reaction
-     * @return the found reaction, or null if not found
+     * @return the found reaction, or null if not found in an optional
      */
-    Reaction findReactionById(@NonNull @Positive Long reactionId);
+    Optional<Reaction> findReactionById(@NonNull @Positive Long reactionId);
 
     /**
      * Finds all reactions for a specific post.

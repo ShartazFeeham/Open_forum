@@ -1,6 +1,7 @@
 package com.open.forum.review.domain.events.publisher;
 
-import org.yaml.snakeyaml.events.CommentEvent;
+
+import com.open.forum.review.domain.events.comment.CommentEvent;
 
 /**
  * This interface is responsible for publishing comment events in the system.

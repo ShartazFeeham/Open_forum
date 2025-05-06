@@ -7,6 +7,7 @@ import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for managing comments in the review system.
@@ -25,9 +26,9 @@ public interface CommentRepository {
      * Finds a comment by its ID.
      *
      * @param commentId the ID of the comment
-     * @return the found comment, or null if not found
+     * @return the found comment, or null if not found in an optional
      */
-    Comment findCommentById(@NonNull @Positive Long commentId);
+    Optional<Comment> findCommentById(@NonNull @Positive Long commentId);
 
     /**
      * Finds all comments for a specific post.
@@ -45,7 +46,7 @@ public interface CommentRepository {
      * @param userId the ID of the user
      * @return a list of comments made by the user
      */
-    List<Comment> findCommentsByUserId(@NonNull @Positive Long userId);
+    List<Comment> findCommentsByUserId(@NonNull @Positive Long userId, @Min(0) int page, @Min(1) int size);
 
     /**
      * Updates an existing comment.

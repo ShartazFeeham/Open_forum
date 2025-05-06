@@ -1,15 +1,29 @@
 package com.open.forum.review.application.service;
 
 import com.open.forum.review.application.dto.comment.CommentReadDTO;
+import com.open.forum.review.application.mapper.CommentMapper;
 import com.open.forum.review.application.useCase.comment.ReadCommentUseCase;
 import com.open.forum.review.application.useCase.comment.ReadCommentsByUserUseCase;
 import com.open.forum.review.application.useCase.comment.ReadCommentsListUseCase;
+import com.open.forum.review.domain.model.comment.Comment;
+import com.open.forum.review.domain.repository.CommentRepository;
+import com.open.forum.review.shared.exception.EntityNotFoundException;
 import jakarta.validation.constraints.Min;
+import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
+@RequiredArgsConstructor
 public class CommentServiceReadsImpl implements ReadCommentsByUserUseCase, ReadCommentsListUseCase, ReadCommentUseCase {
+
+    private final CommentRepository repository;
+    private final Logger log = LoggerFactory.getLogger(CommentServiceReadsImpl.class);
 
     /**
      * Reads a comment by its ID.
@@ -19,7 +33,21 @@ public class CommentServiceReadsImpl implements ReadCommentsByUserUseCase, ReadC
      */
     @Override
     public CommentReadDTO read(@NonNull Long commentId) {
-        return null;
+        log.info("Reading comment with ID: {}", commentId);
+        Optional<Comment> commentOp = repository.findCommentById(commentId);
+        commentOp.ifPresentOrElse(comment -> {
+            log.info("Comment found: {}", comment);
+            if (comment.isReadAllowed()) {
+                log.info("Comment is readable");
+            } else {
+                log.error("Comment with ID {} is not readable", commentId);
+                throw new EntityNotFoundException("Comment not found with ID: " + commentId);
+            }
+        }, () -> {
+            log.error("Comment with ID {} not found", commentId);
+            throw new EntityNotFoundException("Comment not found with ID: " + commentId);
+        });
+        return CommentMapper.toCommentReadDTO(commentOp.get());
     }
 
     /**
@@ -32,7 +60,12 @@ public class CommentServiceReadsImpl implements ReadCommentsByUserUseCase, ReadC
      */
     @Override
     public List<CommentReadDTO> readByUser(@NonNull Long userId, @Min(0) int page, @Min(1) int size) {
-        return List.of();
+        List<Comment> comments = repository.findCommentsByUserId(userId, page, size);
+        log.info("Found {} comments for user ID: {}", comments.size(), userId);
+        return comments.stream()
+                .filter(Comment::isReadAllowed)
+                .map(CommentMapper::toCommentReadDTO)
+                .toList();
     }
 
     /**
@@ -45,6 +78,11 @@ public class CommentServiceReadsImpl implements ReadCommentsByUserUseCase, ReadC
      */
     @Override
     public List<CommentReadDTO> read(@NonNull Long postId, int page, int size) {
-        return List.of();
+        List<Comment> comments = repository.findCommentsByPostId(postId, page, size);
+        log.info("Found {} comments for post ID: {}", comments.size(), postId);
+        return comments.stream()
+                .filter(Comment::isReadAllowed)
+                .map(CommentMapper::toCommentReadDTO)
+                .toList();
     }
 }

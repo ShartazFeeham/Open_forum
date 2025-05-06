@@ -1,5 +1,8 @@
 package com.open.forum.review.domain.model.comment;
 
+import com.open.forum.review.shared.exception.EntityNotFoundException;
+import com.open.forum.review.shared.exception.InvalidEntityException;
+import com.open.forum.review.shared.helper.TokenExtractor;
 import com.open.forum.review.shared.validator.ObjectValidator;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -33,6 +36,14 @@ public class Comment implements ObjectValidator {
                 || (!isReply && postId == null) // Comment must have a post ID
         ;
         return !isInvalid;
+    }
+
+    public boolean isReadAllowed() {
+        if (status == null) {
+            throw new InvalidEntityException("Comment status is null, cannot determine read permission");
+        } else if (status == CommentStatus.DELETED) {
+            throw new EntityNotFoundException("Comment not found with ID: " + commentId);
+        } else return status != CommentStatus.REJECTED && (status != CommentStatus.HIDDEN || TokenExtractor.matchUserId(userId));
     }
 
     @Override

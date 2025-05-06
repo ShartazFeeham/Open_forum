@@ -13,7 +13,7 @@ import lombok.Setter;
  * The COMMENT_EVENT constant is used to identify this type of event.
  */
 @Getter @Setter @Builder
-class CommentEvent extends BaseEvent<Comment> {
+public class CommentEvent extends BaseEvent<Comment> {
 
     private static final String COMMENT_EVENT = "COMMENT_EVENT";
 
