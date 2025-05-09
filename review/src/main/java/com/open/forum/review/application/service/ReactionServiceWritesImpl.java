@@ -6,6 +6,7 @@ import com.open.forum.review.application.useCase.reaction.CreateReactionUseCase;
 import com.open.forum.review.application.useCase.reaction.DeleteReactionUseCase;
 import com.open.forum.review.application.useCase.reaction.UpdateReactionUseCase;
 import com.open.forum.review.domain.model.reaction.Reaction;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -28,7 +29,7 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
      * @param reactionId the ID of the reaction to be deleted
      */
     @Override
-    public void deleteReaction(Long reactionId) {
+    public void deleteReaction(@NotNull Long reactionId) {
 
     }
 
