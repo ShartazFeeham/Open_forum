@@ -23,8 +23,7 @@ public record CommentCreateDTO(Long commentId, Long postId, @NotNull Long userId
         boolean isInvalid = (content == null || content.isBlank()) // Comment has no contents
                 || (postId == null && parentCommentId == null) // Either postId (comment) or parentCommentId (reply) has to be present
                 || (isReply && parentCommentId == null) // Reply must have a parent comment ID
-                || (!isReply && postId == null) // Comment must have a post ID
-                ;
+                || (!isReply && postId == null); // Comment must have a post ID
         return !isInvalid;
     }
 
