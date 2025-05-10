@@ -7,16 +7,16 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * This class represents an event that is triggered when a reaction is requested.
+ * This class represents an event that is triggered when a reaction is created.
  * It extends the ReactionEvent class and contains the necessary information about the reaction.
  *
  * @see ReactionEvent
  */
 @Getter @Setter @Builder
-public class ReactionAppliedEvent extends ReactionEvent {
+public class ReactionCreatedEvent extends ReactionEvent {
 
-    public ReactionAppliedEvent(Reaction reaction) {
-        super(reaction.getPostId(),  Event.REACTION_APPLIED, reaction.getUserId(), reaction);
+    public ReactionCreatedEvent(Reaction reaction) {
+        super(reaction.getPostId(),  Event.COMMENT_CREATED, reaction.getUserId(), reaction);
     }
 
 }
