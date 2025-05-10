@@ -8,17 +8,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@Getter @Setter @Builder @AllArgsConstructor
-public class CommentCreateDTO implements ObjectValidator {
-    private final Long commentId;
-    private final Long postId;
-    @NotNull
-    private final Long userId;
-    private final boolean isReply;
-    private final Long parentCommentId;
-    @NotEmpty
-    private final String content;
-
+@Getter
+@Setter
+@Builder
+public record CommentCreateDTO(Long commentId, Long postId, @NotNull Long userId, boolean isReply, Long parentCommentId,
+                               @NotEmpty String content) implements ObjectValidator {
     /**
      * Validates the object.
      *

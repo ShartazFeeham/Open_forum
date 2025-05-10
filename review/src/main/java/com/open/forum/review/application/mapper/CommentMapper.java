@@ -25,16 +25,16 @@ public class CommentMapper {
      */
     public static Comment toComment(CommentCreateDTO dto) {
         final var builder = Comment.builder()
-                .commentId(dto.getCommentId())
+                .commentId(dto.commentId())
                 .status(CommentStatus.PENDING)
                 .createdAt(ZonedDateTime.now())
-                .userId(dto.getUserId())
+                .userId(dto.userId())
                 .isReply(dto.isReply())
-                .contents(new ArrayList<>(List.of(CommentContent.builder().content(dto.getContent()).build())));
+                .contents(new ArrayList<>(List.of(CommentContent.builder().content(dto.content()).build())));
         if (dto.isReply()) {
-            builder.parentCommentId(dto.getParentCommentId());
+            builder.parentCommentId(dto.parentCommentId());
         } else {
-            builder.postId(dto.getPostId());
+            builder.postId(dto.postId());
         }
         return builder.build();
     }
@@ -48,8 +48,8 @@ public class CommentMapper {
      */
     public static Comment toComment(CommentUpdateDTO dto, Comment comment) {
         comment.getContents().add(CommentContent.builder()
-                .content(dto.getContent())
-                .commentId(dto.getCommentId())
+                .content(dto.content())
+                .commentId(dto.commentId())
                 .createdAt(ZonedDateTime.now())
                 .build());
         return comment;

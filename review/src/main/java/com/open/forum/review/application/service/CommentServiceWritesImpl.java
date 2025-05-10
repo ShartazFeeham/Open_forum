@@ -111,7 +111,7 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
      */
     @Override
     public void update(CommentUpdateDTO dto) {
-        Optional<Comment> commentOp = repository.findCommentById(dto.getCommentId());
+        Optional<Comment> commentOp = repository.findCommentById(dto.commentId());
         commentOp.ifPresentOrElse(
                 comment -> {
                     Comment updatedComment = CommentMapper.toComment(dto, comment);
@@ -124,8 +124,8 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
                         throw new TaskNotCompletableException("Cannot perform this action right now, please try again later.");
                     }
                 }, () -> {
-                    log.error("Update failed, comment not found with ID: {}", dto.getCommentId());
-                    throw new IllegalRequestException("Comment not found with ID: " + dto.getCommentId());
+                    log.error("Update failed, comment not found with ID: {}", dto.commentId());
+                    throw new IllegalRequestException("Comment not found with ID: " + dto.commentId());
                 }
         );
     }

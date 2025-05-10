@@ -22,11 +22,11 @@ public class ReactionMapper {
      */
     public static Reaction toReaction(ReactionCreateDTO dto) {
         return Reaction.builder()
-                .postId(dto.getPostId())
-                .commentId(dto.getCommentId())
-                .userId(dto.getUserId())
+                .postId(dto.postId())
+                .commentId(dto.commentId())
+                .userId(dto.userId())
                 .reactionStatus(ReactionStatus.PENDING)
-                .reactionType(dto.getReactionType())
+                .reactionType(dto.reactionType())
                 .createdAt(ZonedDateTime.now())
                 .build();
     }
@@ -39,7 +39,7 @@ public class ReactionMapper {
      * @return the updated Reaction entity
      */
     public static Reaction toReaction(ReactionUpdateDTO dto, Reaction reaction) {
-        reaction.setReactionType(dto.getReactionType());
+        reaction.setReactionType(dto.reactionType());
         return reaction;
     }
 

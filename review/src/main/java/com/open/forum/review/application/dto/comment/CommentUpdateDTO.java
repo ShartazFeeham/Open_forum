@@ -9,13 +9,12 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Getter @Setter @AllArgsConstructor @Builder
-public class CommentUpdateDTO {
+@Getter
+@Setter
+@Builder
+public record CommentUpdateDTO(Long commentId, String content) {
 
     private static final Logger log = LoggerFactory.getLogger(CommentUpdateDTO.class);
-
-    private final Long commentId;
-    private final String content;
 
     public boolean validate(Long commentId, Comment comment) {
         return comment != null && comment.getCommentId() != null

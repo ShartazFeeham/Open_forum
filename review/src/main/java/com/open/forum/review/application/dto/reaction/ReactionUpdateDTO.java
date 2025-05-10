@@ -10,11 +10,10 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Getter @Setter @AllArgsConstructor @Builder
-public class ReactionUpdateDTO {
-
-    private final Long reactionId;
-    private final ReactionType reactionType;
+@Getter
+@Setter
+@Builder
+public record ReactionUpdateDTO(Long reactionId, ReactionType reactionType) {
 
     private static final Logger log = LoggerFactory.getLogger(ReactionUpdateDTO.class);
 
