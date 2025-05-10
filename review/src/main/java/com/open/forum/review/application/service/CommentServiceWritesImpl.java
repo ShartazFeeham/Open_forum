@@ -8,6 +8,7 @@ import com.open.forum.review.application.useCase.comment.CommentRejectedUseCase;
 import com.open.forum.review.application.useCase.comment.DeleteCommentUseCase;
 import com.open.forum.review.application.useCase.comment.UpdateCommentUseCase;
 import com.open.forum.review.domain.cache.PostPrivacyCache;
+import com.open.forum.review.domain.cache.UserExistenceCache;
 import com.open.forum.review.domain.events.comment.CommentCreatedEvent;
 import com.open.forum.review.domain.events.comment.CommentDeletedEvent;
 import com.open.forum.review.domain.events.comment.CommentUpdatedEvent;
@@ -18,6 +19,7 @@ import com.open.forum.review.domain.repository.CommentRepository;
 import com.open.forum.review.shared.PostPrivacy;
 import com.open.forum.review.shared.exception.IllegalRequestException;
 import com.open.forum.review.shared.exception.TaskNotCompletableException;
+import com.open.forum.review.shared.helper.TokenExtractor;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +34,7 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
     private final Logger log = LoggerFactory.getLogger(CommentServiceWritesImpl.class);
     private final CommentEventPublisher commentEventPublisher;
     private final PostPrivacyCache postPrivacyCache;
+    private final UserExistenceCache userExistenceCache;
 
     /**
      * Adds a new comment.
@@ -42,6 +45,7 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
     public void create(CommentCreateDTO dto) {
         dto.validateOrThrow();
         Comment comment = CommentMapper.toComment(dto);
+        validateUserExistence(comment);
         PostPrivacy postPrivacy = postPrivacyCache.getPostPrivacy(comment.getPostId());
         checkWhetherCommentIsAllowed(postPrivacy, comment);
         comment.setStatus(CommentStatus.PUBLISHED);
@@ -53,6 +57,17 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
             log.error("Error saving comment: {}", e.getMessage());
             throw new TaskNotCompletableException("Cannot perform this action right now."
                     + (comment.isReply() ? "comment" : "post") + " may not exit! Or please try again later.");
+        }
+    }
+
+    private void validateUserExistence(Comment comment) {
+        Boolean isUserExist = userExistenceCache.isUserExist(comment.getUserId());
+        if (isUserExist == null) {
+            log.error("User existence check failed for userId: {}", comment.getUserId());
+            throw new TaskNotCompletableException("Cannot perform this action right now, please try again later.");
+        } else if (!isUserExist) {
+            log.error("User does not exist: {}", comment.getUserId());
+            throw new IllegalRequestException("User does not exist.");
         }
     }
 
@@ -84,6 +99,7 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
         commentOptional.ifPresentOrElse(
                 comment -> {
                     try {
+                        checkForUserRight(comment, "delete");
                         repository.deleteComment(commentId);
                         log.info("Comment deleted successfully: {}", comment);
                         publishCommentDeletedEvent(comment);
@@ -116,6 +132,7 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
                 comment -> {
                     Comment updatedComment = CommentMapper.toComment(dto, comment);
                     try {
+                        checkForUserRight(comment, "update");
                         repository.updateComment(updatedComment);
                         log.info("Comment updated successfully: {}", updatedComment);
                         publishCommentUpdatedEvent(updatedComment);
@@ -151,6 +168,14 @@ public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommen
         } catch (Exception e) {
             log.error("Error rejecting comment: {}, error: {}", comment, e.getMessage());
             throw new TaskNotCompletableException("Cannot perform this action right now, please try again later.");
+        }
+    }
+
+    private void checkForUserRight(Comment comment, String action) {
+        boolean matchUserId = TokenExtractor.matchUserId(comment.getUserId());
+        if (!matchUserId) {
+            log.error("User does not have permission to {} this comment: {}", action, comment.getUserId());
+            throw new IllegalRequestException("You do not have permission to " + action + " this comment.");
         }
     }
 }
