@@ -2,15 +2,47 @@ package com.open.forum.review.application.service;
 
 import com.open.forum.review.application.dto.reaction.ReactionCreateDTO;
 import com.open.forum.review.application.dto.reaction.ReactionUpdateDTO;
+import com.open.forum.review.application.mapper.ReactionMapper;
 import com.open.forum.review.application.useCase.reaction.CreateReactionUseCase;
 import com.open.forum.review.application.useCase.reaction.DeleteReactionUseCase;
 import com.open.forum.review.application.useCase.reaction.UpdateReactionUseCase;
+import com.open.forum.review.domain.cache.PostPrivacyCache;
+import com.open.forum.review.domain.events.publisher.ReactionEventPublisher;
+import com.open.forum.review.domain.events.reaction.ReactionCreatedEvent;
+import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.model.reaction.Reaction;
+import com.open.forum.review.domain.model.reaction.ReactionStatus;
+import com.open.forum.review.domain.repository.CommentRepository;
+import com.open.forum.review.domain.repository.ReactionRepository;
+import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.exception.IllegalRequestException;
+import com.open.forum.review.shared.exception.TaskNotCompletableException;
 import jakarta.validation.constraints.NotNull;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteReactionUseCase, UpdateReactionUseCase {
+
+    private final ReactionRepository repository;
+    private final PostPrivacyCache postPrivacyCache;
+    private final CommentRepository commentRepository;
+    private final ReactionEventPublisher reactionEventPublisher;
+    private static final Logger log = LoggerFactory.getLogger(ReactionServiceWritesImpl.class);
+
+    public ReactionServiceWritesImpl(ReactionRepository repository,
+                                     PostPrivacyCache postPrivacyCache,
+                                     CommentRepository commentRepository,
+                                     ReactionEventPublisher reactionEventPublisher) {
+        this.repository = repository;
+        this.postPrivacyCache = postPrivacyCache;
+        this.commentRepository = commentRepository;
+        this.reactionEventPublisher = reactionEventPublisher;
+    }
 
     /**
      * Creates a new reaction.
@@ -20,7 +52,89 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
      */
     @Override
     public Reaction create(ReactionCreateDTO dto) {
+        dto.validateOrThrow();
+        Reaction reaction = ReactionMapper.toReaction(dto);
+        checkPrivacy(reaction);
+        reaction.setReactionStatus(ReactionStatus.APPROVED);
+        try {
+            repository.saveReaction(reaction);
+            log.info("Reaction saved successfully: {}", reaction);
+            publishReactionCreatedEvent(reaction);
+        } catch (Exception e) {
+            log.error("Error saving reaction: {}", e.getMessage());
+            throw new TaskNotCompletableException("Cannot perform this action right now." +
+                    (reaction.getPostId() == null ? "comment" : "post") + " may not exit! Or please try again later.");
+        }
         return null;
+    }
+
+    private void checkPrivacy(Reaction reaction) {
+        if (reaction.getPostId() == null) {
+            checkForCommentPrivacy(reaction);
+        } else {
+            checkForPostPrivacy(reaction);
+        }
+    }
+
+    private void checkForCommentPrivacy(Reaction reaction) {
+        commentRepository.findCommentById(reaction.getCommentId()).ifPresentOrElse(
+                comment -> {
+                    log.info("Comment found: {}", comment);
+                    if (comment.getStatus() != CommentStatus.PUBLISHED) {
+                        log.error("Comment current status: {}, can not create reaction for commentId: {}", comment
+                                .getStatus(), comment.getCommentId());
+                        throw new TaskNotCompletableException("Cannot perform this action right now because the " +
+                                "comment is not available, please try again later.");
+                    }
+                }, () -> {
+                    log.error("Comment not found for commentId: {}", reaction.getCommentId());
+                    throw new TaskNotCompletableException("Cannot perform this action right now because the comment " +
+                            "is not available, please try again later.");
+                }
+        );
+    }
+
+    private void checkForPostPrivacy(Reaction reaction) {
+        PostPrivacy postPrivacy = postPrivacyCache.getPostPrivacy(reaction.getPostId());
+        if (Objects.isNull(postPrivacy)) {
+            log.error("Post privacy not found for postId: {}", reaction.getPostId());
+            throw new TaskNotCompletableException("Cannot perform this action right now, please try again later.");
+        }
+        if (postPrivacy == PostPrivacy.REVIEW_NOT_ALLOWED) {
+            log.error("Commenting is not allowed on a private post: {}", reaction.getPostId());
+            throw new IllegalRequestException("Commenting is not allowed on a private post.");
+        }
+    }
+
+    private void publishReactionCreatedEvent(Reaction reaction) {
+        final ReactionCreatedEvent event = new ReactionCreatedEvent(reaction);
+        reactionEventPublisher.publish(event);
+        log.info("Reaction created event published: {}", event);
+    }
+
+    /**
+     * Updates an existing reaction.
+     *
+     * @param dto the data transfer object containing the updated details of the reaction
+     */
+    @Override
+    public void update(ReactionUpdateDTO dto) {
+        Optional<Reaction> reactionOp = repository.findReactionById(dto.reactionId());
+        reactionOp.ifPresentOrElse(reaction -> {
+            dto.validateOrThrow(dto.reactionId(), reaction);
+            reaction.setReactionType(dto.reactionType());
+            try {
+                repository.updateReaction(reaction);
+                log.info("Reaction updated successfully: {}", reaction);
+            } catch (Exception e) {
+                log.error("Error updating reaction: {}", e.getMessage());
+                throw new TaskNotCompletableException("Cannot perform this action right now." +
+                        (reaction.getPostId() == null ? "comment" : "post") + " may not exit! Or please try again later.");
+            }
+        }, () -> {
+            log.error("Update failed, reaction not found with ID: {}", dto.reactionId());
+            throw new IllegalRequestException("Reaction not found with ID: " + dto.reactionId());
+        });
     }
 
     /**
@@ -30,17 +144,21 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
      */
     @Override
     public void deleteReaction(@NotNull Long reactionId) {
-
-    }
-
-    /**
-     * Updates an existing reaction.
-     *
-     * @param dto the data transfer object containing the updated details of the reaction
-     * @return the updated reaction
-     */
-    @Override
-    public Reaction update(ReactionUpdateDTO dto) {
-        return null;
+        final var reactionOptional = repository.findReactionById(reactionId);
+        reactionOptional.ifPresentOrElse(
+                reaction -> {
+                    try {
+                        repository.deleteReaction(reactionId);
+                        log.info("Reaction deleted successfully: {}", reaction);
+                    } catch (Exception e) {
+                        log.error("Error deleting reaction: {}, error: {}", reaction, e.getMessage());
+                        throw new TaskNotCompletableException("Cannot perform this action right now." +
+                                (reaction.getPostId() == null ? "comment" : "post") + " may not exit! Or please try again later.");
+                    }
+                }, () -> {
+                    log.error("Reaction not found with ID: {}", reactionId);
+                    throw new IllegalRequestException("Reaction not found with ID: " + reactionId);
+                }
+        );
     }
 }
