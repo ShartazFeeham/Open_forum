@@ -7,8 +7,10 @@ import com.open.forum.review.application.useCase.reaction.CreateReactionUseCase;
 import com.open.forum.review.application.useCase.reaction.DeleteReactionUseCase;
 import com.open.forum.review.application.useCase.reaction.UpdateReactionUseCase;
 import com.open.forum.review.domain.cache.PostPrivacyCache;
+import com.open.forum.review.domain.cache.UserExistenceCache;
 import com.open.forum.review.domain.events.publisher.ReactionEventPublisher;
 import com.open.forum.review.domain.events.reaction.ReactionCreatedEvent;
+import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionStatus;
@@ -17,7 +19,9 @@ import com.open.forum.review.domain.repository.ReactionRepository;
 import com.open.forum.review.shared.PostPrivacy;
 import com.open.forum.review.shared.exception.IllegalRequestException;
 import com.open.forum.review.shared.exception.TaskNotCompletableException;
+import com.open.forum.review.shared.helper.TokenExtractor;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -26,23 +30,15 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteReactionUseCase, UpdateReactionUseCase {
 
     private final ReactionRepository repository;
     private final PostPrivacyCache postPrivacyCache;
     private final CommentRepository commentRepository;
     private final ReactionEventPublisher reactionEventPublisher;
+    private final UserExistenceCache userExistenceCache;
     private static final Logger log = LoggerFactory.getLogger(ReactionServiceWritesImpl.class);
-
-    public ReactionServiceWritesImpl(ReactionRepository repository,
-                                     PostPrivacyCache postPrivacyCache,
-                                     CommentRepository commentRepository,
-                                     ReactionEventPublisher reactionEventPublisher) {
-        this.repository = repository;
-        this.postPrivacyCache = postPrivacyCache;
-        this.commentRepository = commentRepository;
-        this.reactionEventPublisher = reactionEventPublisher;
-    }
 
     /**
      * Creates a new reaction.
@@ -54,6 +50,7 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
     public Reaction create(ReactionCreateDTO dto) {
         dto.validateOrThrow();
         Reaction reaction = ReactionMapper.toReaction(dto);
+        validateUserExistence(reaction);
         checkPrivacy(reaction);
         reaction.setReactionStatus(ReactionStatus.APPROVED);
         try {
@@ -66,6 +63,18 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
                     (reaction.getPostId() == null ? "comment" : "post") + " may not exit! Or please try again later.");
         }
         return null;
+    }
+
+    private void validateUserExistence(Reaction reaction) {
+        Boolean isUserExist = userExistenceCache.isUserExist(reaction.getUserId());
+        if (isUserExist == null) {
+            log.error("User existence check failed for userId: {}", reaction.getUserId());
+            throw new TaskNotCompletableException("Cannot perform this action right now, please try again later.");
+        }
+        if (!isUserExist) {
+            log.error("User does not exist: {}", reaction.getUserId());
+            throw new IllegalRequestException("User does not exist.");
+        }
     }
 
     private void checkPrivacy(Reaction reaction) {
@@ -124,6 +133,7 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
             dto.validateOrThrow(dto.reactionId(), reaction);
             reaction.setReactionType(dto.reactionType());
             try {
+                checkForUserRight(reaction, "update");
                 repository.updateReaction(reaction);
                 log.info("Reaction updated successfully: {}", reaction);
             } catch (Exception e) {
@@ -148,6 +158,7 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
         reactionOptional.ifPresentOrElse(
                 reaction -> {
                     try {
+                        checkForUserRight(reaction, "delete");
                         repository.deleteReaction(reactionId);
                         log.info("Reaction deleted successfully: {}", reaction);
                     } catch (Exception e) {
@@ -160,5 +171,13 @@ public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteR
                     throw new IllegalRequestException("Reaction not found with ID: " + reactionId);
                 }
         );
+    }
+
+    private void checkForUserRight(Reaction reaction, String action) {
+        boolean matchUserId = TokenExtractor.matchUserId(reaction.getUserId());
+        if (!matchUserId) {
+            log.error("User does not have permission to {} this comment: {}", action, reaction.getUserId());
+            throw new IllegalRequestException("You do not have permission to " + action + " this comment.");
+        }
     }
 }
