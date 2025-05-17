@@ -1,6 +1,7 @@
 package com.open.forum.review.infrastructure.cache;
 
 import com.open.forum.review.domain.cache.UserExistenceCache;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -12,7 +13,7 @@ public class UserExistenceCacheImpl implements UserExistenceCache {
      * @return true if the user exists, false if it does not exist, null if not checked yet
      */
     @Override
-    public Boolean isUserExist(Long userId) {
+    public Boolean isUserExist(@NotNull Long userId) {
         return null;
     }
 
@@ -23,7 +24,7 @@ public class UserExistenceCacheImpl implements UserExistenceCache {
      * @return true if the user exists, false if it does not exist, null if not checked yet
      */
     @Override
-    public Boolean isUserExist(String username) {
+    public Boolean isUserExist(@NotNull String username) {
         return null;
     }
 }

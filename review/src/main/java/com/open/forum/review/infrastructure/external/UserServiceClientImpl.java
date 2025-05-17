@@ -1,6 +1,7 @@
 package com.open.forum.review.infrastructure.external;
 
 import com.open.forum.review.domain.external.client.UserServiceClient;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -14,7 +15,7 @@ public class UserServiceClientImpl implements UserServiceClient {
      * @return the user ID associated with the username
      */
     @Override
-    public Long getUserIdByUsername(String username) {
+    public Long getUserIdByUsername(@NotNull String username) {
         return 0L;
     }
 
@@ -25,7 +26,7 @@ public class UserServiceClientImpl implements UserServiceClient {
      * @return the username associated with the user ID
      */
     @Override
-    public String getUsernameByUserId(Long userId) {
+    public String getUsernameByUserId(@NotNull Long userId) {
         return "";
     }
 
@@ -36,7 +37,7 @@ public class UserServiceClientImpl implements UserServiceClient {
      * @return a map containing the details of the user
      */
     @Override
-    public Map<String, Object> getUserById(Long userId) {
+    public Map<String, Object> getUserById(@NotNull Long userId) {
         return Map.of();
     }
 
@@ -47,7 +48,7 @@ public class UserServiceClientImpl implements UserServiceClient {
      * @return true if the user exists, false otherwise
      */
     @Override
-    public boolean isUserExist(Long userId) {
+    public boolean isUserExist(@NotNull Long userId) {
         return false;
     }
 }

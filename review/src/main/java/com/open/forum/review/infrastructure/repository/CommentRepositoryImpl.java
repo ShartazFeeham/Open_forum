@@ -2,7 +2,11 @@ package com.open.forum.review.infrastructure.repository;
 
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.repository.CommentRepository;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import org.springframework.stereotype.Repository;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +19,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @param comment the comment to save
      */
     @Override
-    public void saveComment(Comment comment) {
+    public void saveComment(@Validated Comment comment) {
 
     }
 
@@ -26,7 +30,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @return the found comment, or null if not found in an optional
      */
     @Override
-    public Optional<Comment> findCommentById(Long commentId) {
+    public Optional<Comment> findCommentById(@NotNull @Positive Long commentId) {
         return Optional.empty();
     }
 
@@ -39,7 +43,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @return a list of comments for the post
      */
     @Override
-    public List<Comment> findCommentsByPostId(Long postId, int page, int size) {
+    public List<Comment> findCommentsByPostId(@NotNull @Positive Long postId, @Min(0) int page, @Min(1) int size) {
         return List.of();
     }
 
@@ -52,7 +56,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @return a list of comments made by the user
      */
     @Override
-    public List<Comment> findCommentsByUserId(Long userId, int page, int size) {
+    public List<Comment> findCommentsByUserId(@NotNull @Positive Long userId, @Min(0) int page, @Min(1) int size) {
         return List.of();
     }
 
@@ -62,7 +66,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @param comment the comment to update
      */
     @Override
-    public void updateComment(Comment comment) {
+    public void updateComment(@Validated Comment comment) {
 
     }
 
@@ -72,7 +76,7 @@ public class CommentRepositoryImpl implements CommentRepository {
      * @param commentId the ID of the comment to delete
      */
     @Override
-    public void deleteComment(Long commentId) {
+    public void deleteComment(@NotNull @Positive Long commentId) {
 
     }
 }
