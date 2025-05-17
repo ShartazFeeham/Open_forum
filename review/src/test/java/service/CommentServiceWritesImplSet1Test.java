@@ -1,3 +1,5 @@
+package service;
+
 import com.open.forum.review.application.dto.comment.CommentCreateDTO;
 import com.open.forum.review.application.dto.comment.CommentUpdateDTO;
 import com.open.forum.review.application.service.CommentServiceWritesImpl;
@@ -24,7 +26,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class CommentServiceWritesImplTest {
+class CommentServiceWritesImplSet1Test {
 
     @Mock
     private CommentRepository repository;

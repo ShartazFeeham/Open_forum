@@ -1,3 +1,5 @@
+package service;
+
 import com.open.forum.review.application.dto.comment.CommentReadDTO;
 import com.open.forum.review.application.mapper.CommentMapper;
 import com.open.forum.review.application.service.CommentServiceReadsImpl;
@@ -16,7 +18,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class CommentServiceReadsImplTest {
+class CommentServiceReadsImplSet1Test {
 
     @Mock
     private CommentRepository repository;
