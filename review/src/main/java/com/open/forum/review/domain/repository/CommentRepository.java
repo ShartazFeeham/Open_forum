@@ -2,8 +2,8 @@ package com.open.forum.review.domain.repository;
 
 import com.open.forum.review.domain.model.comment.Comment;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public interface CommentRepository {
      * @param commentId the ID of the comment
      * @return the found comment, or null if not found in an optional
      */
-    Optional<Comment> findCommentById(@NonNull @Positive Long commentId);
+    Optional<Comment> findCommentById(@NotNull @Positive Long commentId);
 
     /**
      * Finds all comments for a specific post.
@@ -38,7 +38,7 @@ public interface CommentRepository {
      * @param size the number of comments per page
      * @return a list of comments for the post
      */
-    List<Comment> findCommentsByPostId(@NonNull @Positive Long postId, @Min(0) int page, @Min(1) int size);
+    List<Comment> findCommentsByPostId(@NotNull @Positive Long postId, @Min(0) int page, @Min(1) int size);
 
     /**
      * Finds all comments made by a specific user.
@@ -46,7 +46,7 @@ public interface CommentRepository {
      * @param userId the ID of the user
      * @return a list of comments made by the user
      */
-    List<Comment> findCommentsByUserId(@NonNull @Positive Long userId, @Min(0) int page, @Min(1) int size);
+    List<Comment> findCommentsByUserId(@NotNull @Positive Long userId, @Min(0) int page, @Min(1) int size);
 
     /**
      * Updates an existing comment.
@@ -60,5 +60,5 @@ public interface CommentRepository {
      *
      * @param commentId the ID of the comment to delete
      */
-    void deleteComment(@NonNull @Positive Long commentId);
+    void deleteComment(@NotNull @Positive Long commentId);
 }

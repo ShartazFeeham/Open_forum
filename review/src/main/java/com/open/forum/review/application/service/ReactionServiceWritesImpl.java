@@ -3,14 +3,11 @@ package com.open.forum.review.application.service;
 import com.open.forum.review.application.dto.reaction.ReactionCreateDTO;
 import com.open.forum.review.application.dto.reaction.ReactionUpdateDTO;
 import com.open.forum.review.application.mapper.ReactionMapper;
-import com.open.forum.review.application.useCase.reaction.CreateReactionUseCase;
-import com.open.forum.review.application.useCase.reaction.DeleteReactionUseCase;
-import com.open.forum.review.application.useCase.reaction.UpdateReactionUseCase;
+import com.open.forum.review.application.service.ports.ReactionServiceWrites;
 import com.open.forum.review.domain.cache.PostPrivacyCache;
 import com.open.forum.review.domain.cache.UserExistenceCache;
 import com.open.forum.review.domain.events.publisher.ReactionEventPublisher;
 import com.open.forum.review.domain.events.reaction.ReactionCreatedEvent;
-import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionStatus;
@@ -31,7 +28,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class ReactionServiceWritesImpl implements CreateReactionUseCase, DeleteReactionUseCase, UpdateReactionUseCase {
+public class ReactionServiceWritesImpl implements ReactionServiceWrites {
 
     private final ReactionRepository repository;
     private final PostPrivacyCache postPrivacyCache;

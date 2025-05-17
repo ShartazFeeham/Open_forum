@@ -1,8 +1,8 @@
 package com.open.forum.review.domain.external.client;
 
 import com.open.forum.review.shared.PostPrivacy;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.lang.NonNull;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ public interface PostServiceClient {
      * @param postId the ID of the post
      * @return the privacy settings of the post
      */
-    PostPrivacy getPostPrivacy(@NonNull @Positive Long postId);
+    PostPrivacy getPostPrivacy(@NotNull @Positive Long postId);
 
     /**
      * Checks if a post exists.
@@ -21,7 +21,7 @@ public interface PostServiceClient {
      * @param postId the ID of the post
      * @return true if the post exists, false otherwise
      */
-    boolean isPostExist(@NonNull @Positive Long postId);
+    boolean isPostExist(@NotNull @Positive Long postId);
 
     /**
      * Retrieves the details of a post.
@@ -29,5 +29,5 @@ public interface PostServiceClient {
      * @param postId the ID of the post
      * @return a map containing the details of the post
      */
-    Map<String, Object> getPostById(@NonNull @Positive Long postId);
+    Map<String, Object> getPostById(@NotNull @Positive Long postId);
 }

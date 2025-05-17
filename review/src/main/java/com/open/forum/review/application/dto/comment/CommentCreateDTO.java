@@ -3,14 +3,7 @@ package com.open.forum.review.application.dto.comment;
 import com.open.forum.review.shared.validator.ObjectValidator;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 
-@Getter
-@Setter
-@Builder
 public record CommentCreateDTO(Long commentId, Long postId, @NotNull Long userId, boolean isReply, Long parentCommentId,
                                @NotEmpty String content) implements ObjectValidator {
     /**

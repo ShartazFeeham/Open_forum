@@ -1,6 +1,7 @@
 package com.open.forum.review.domain.cache;
 
 import com.open.forum.review.shared.PostPrivacy;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Interface for caching post privacy settings.
@@ -14,6 +15,6 @@ public interface PostPrivacyCache {
      * @param postId the ID of the post
      * @return the privacy settings of the post
      */
-    PostPrivacy getPostPrivacy(Long postId);
+    PostPrivacy getPostPrivacy(@NotNull Long postId);
 
 }

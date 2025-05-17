@@ -36,8 +36,8 @@ public class ReactionRepositoryImpl implements ReactionRepository {
      * Finds all reactions for a specific post.
      *
      * @param postId the ID of the post
-     * @param page
-     * @param size
+     * @param page the page number for pagination
+     * @param size the number of reactions per page
      * @return a list of reactions for the post
      */
     @Override

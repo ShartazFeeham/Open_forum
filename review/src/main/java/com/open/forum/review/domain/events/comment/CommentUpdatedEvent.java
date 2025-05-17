@@ -2,7 +2,6 @@ package com.open.forum.review.domain.events.comment;
 
 import com.open.forum.review.domain.events.Event;
 import com.open.forum.review.domain.model.comment.Comment;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,7 @@ import lombok.Setter;
  *
  * @see CommentEvent
  */
-@Getter @Setter @Builder
+@Getter @Setter
 public class CommentUpdatedEvent extends CommentEvent {
 
     public CommentUpdatedEvent(Comment comment) {

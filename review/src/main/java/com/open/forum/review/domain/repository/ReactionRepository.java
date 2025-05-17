@@ -3,8 +3,8 @@ package com.open.forum.review.domain.repository;
 import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionType;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-import org.springframework.lang.NonNull;
 import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public interface ReactionRepository {
      * @param reactionId the ID of the reaction
      * @return the found reaction, or null if not found in an optional
      */
-    Optional<Reaction> findReactionById(@NonNull @Positive Long reactionId);
+    Optional<Reaction> findReactionById(@NotNull @Positive Long reactionId);
 
     /**
      * Finds all reactions for a specific post.
@@ -34,7 +34,7 @@ public interface ReactionRepository {
      * @param postId the ID of the post
      * @return a list of reactions for the post
      */
-    List<Reaction> findReactionsByPostId(@NonNull @Positive Long postId, @Min(0) int page, @Min(1) int size);
+    List<Reaction> findReactionsByPostId(@NotNull @Positive Long postId, @Min(0) int page, @Min(1) int size);
 
     /**
      * Finds all reactions for a specific post and counts them by type.
@@ -42,7 +42,7 @@ public interface ReactionRepository {
      * @param postId the ID of the post
      * @return a map of reaction types and their counts
      */
-    Map<ReactionType, Integer> findReactionsCountByPostId(@NonNull @Positive Long postId);
+    Map<ReactionType, Integer> findReactionsCountByPostId(@NotNull @Positive Long postId);
 
     /**
      * Finds all reactions for a specific comment.
@@ -50,7 +50,7 @@ public interface ReactionRepository {
      * @param commentId the ID of the comment
      * @return a list of reactions for the comment
      */
-    List<Reaction> findReactionsByCommentId(@NonNull @Positive Long commentId);
+    List<Reaction> findReactionsByCommentId(@NotNull @Positive Long commentId);
 
     /**
      * Finds all reactions for a specific comment and counts them by type.
@@ -58,7 +58,7 @@ public interface ReactionRepository {
      * @param postId the ID of the post
      * @return a map of reaction types and their counts
      */
-    Map<ReactionType, Integer> findReactionsCountByCommentId(@NonNull @Positive Long postId);
+    Map<ReactionType, Integer> findReactionsCountByCommentId(@NotNull @Positive Long postId);
 
     /**
      * Updates an existing reaction.
@@ -72,5 +72,5 @@ public interface ReactionRepository {
      *
      * @param reactionId the ID of the reaction to delete
      */
-    void deleteReaction(@NonNull @Positive Long reactionId);
+    void deleteReaction(@NotNull @Positive Long reactionId);
 }

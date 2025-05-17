@@ -1,5 +1,7 @@
 package com.open.forum.review.domain.cache;
 
+import jakarta.validation.constraints.NotNull;
+
 public interface UserExistenceCache {
     /**
      * Checks if a user exists by their ID.
@@ -7,7 +9,7 @@ public interface UserExistenceCache {
      * @param userId the ID of the user
      * @return true if the user exists, false if it does not exist, null if not checked yet
      */
-    Boolean isUserExist(Long userId);
+    Boolean isUserExist(@NotNull Long userId);
 
     /**
      * Checks if a user exists by their username.
@@ -15,5 +17,5 @@ public interface UserExistenceCache {
      * @param username the username of the user
      * @return true if the user exists, false if it does not exist, null if not checked yet
      */
-    Boolean isUserExist(String username);
+    Boolean isUserExist(@NotNull String username);
 }

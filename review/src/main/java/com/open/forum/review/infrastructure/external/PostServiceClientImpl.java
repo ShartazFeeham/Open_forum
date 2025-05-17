@@ -2,6 +2,7 @@ package com.open.forum.review.infrastructure.external;
 
 import com.open.forum.review.domain.external.client.PostServiceClient;
 import com.open.forum.review.shared.PostPrivacy;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -15,7 +16,7 @@ public class PostServiceClientImpl implements PostServiceClient {
      * @return the privacy settings of the post
      */
     @Override
-    public PostPrivacy getPostPrivacy(Long postId) {
+    public PostPrivacy getPostPrivacy(@NotNull Long postId) {
         return null;
     }
 
@@ -26,7 +27,7 @@ public class PostServiceClientImpl implements PostServiceClient {
      * @return true if the post exists, false otherwise
      */
     @Override
-    public boolean isPostExist(Long postId) {
+    public boolean isPostExist(@NotNull Long postId) {
         return false;
     }
 
@@ -37,7 +38,7 @@ public class PostServiceClientImpl implements PostServiceClient {
      * @return a map containing the details of the post
      */
     @Override
-    public Map<String, Object> getPostById(Long postId) {
+    public Map<String, Object> getPostById(@NotNull Long postId) {
         return Map.of();
     }
 }

@@ -3,10 +3,7 @@ package com.open.forum.review.application.service;
 import com.open.forum.review.application.dto.comment.CommentCreateDTO;
 import com.open.forum.review.application.dto.comment.CommentUpdateDTO;
 import com.open.forum.review.application.mapper.CommentMapper;
-import com.open.forum.review.application.useCase.comment.AddCommentUseCase;
-import com.open.forum.review.application.useCase.comment.CommentRejectedUseCase;
-import com.open.forum.review.application.useCase.comment.DeleteCommentUseCase;
-import com.open.forum.review.application.useCase.comment.UpdateCommentUseCase;
+import com.open.forum.review.application.service.ports.CommentServiceWrites;
 import com.open.forum.review.domain.cache.PostPrivacyCache;
 import com.open.forum.review.domain.cache.UserExistenceCache;
 import com.open.forum.review.domain.events.comment.CommentCreatedEvent;
@@ -28,7 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service @RequiredArgsConstructor
-public class CommentServiceWritesImpl implements AddCommentUseCase, UpdateCommentUseCase, DeleteCommentUseCase, CommentRejectedUseCase {
+public class CommentServiceWritesImpl implements CommentServiceWrites {
 
     private final CommentRepository repository;
     private final Logger log = LoggerFactory.getLogger(CommentServiceWritesImpl.class);

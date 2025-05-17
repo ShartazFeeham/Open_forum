@@ -2,9 +2,7 @@ package com.open.forum.review.application.service;
 
 import com.open.forum.review.application.dto.comment.CommentReadDTO;
 import com.open.forum.review.application.mapper.CommentMapper;
-import com.open.forum.review.application.useCase.comment.ReadCommentUseCase;
-import com.open.forum.review.application.useCase.comment.ReadCommentsByUserUseCase;
-import com.open.forum.review.application.useCase.comment.ReadCommentsListUseCase;
+import com.open.forum.review.application.service.ports.CommentServiceReads;
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.repository.CommentRepository;
 import com.open.forum.review.shared.exception.EntityNotFoundException;
@@ -20,7 +18,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class CommentServiceReadsImpl implements ReadCommentsByUserUseCase, ReadCommentsListUseCase, ReadCommentUseCase {
+public class CommentServiceReadsImpl implements CommentServiceReads {
 
     private final CommentRepository repository;
     private final Logger log = LoggerFactory.getLogger(CommentServiceReadsImpl.class);

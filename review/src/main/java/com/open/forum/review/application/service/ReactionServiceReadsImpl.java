@@ -2,7 +2,7 @@ package com.open.forum.review.application.service;
 
 import com.open.forum.review.application.dto.reaction.ReactionReadDTO;
 import com.open.forum.review.application.mapper.ReactionMapper;
-import com.open.forum.review.application.useCase.reaction.*;
+import com.open.forum.review.application.service.ports.ReactionServiceReads;
 import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionType;
 import com.open.forum.review.domain.repository.ReactionRepository;
@@ -19,8 +19,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 @Service
-    public class ReactionServiceReadsImpl implements ReadReactionsCountByCommentIdUseCase, ReadReactionByIdUseCase,
-            ReadReactionByPostIdUseCase, ReadReactionCountByPostIdUseCase, ReadReactionsByCommentIdUseCase {
+    public class ReactionServiceReadsImpl implements ReactionServiceReads {
 
         private final ReactionRepository repository;
         private static final Logger log = LoggerFactory.getLogger(ReactionServiceReadsImpl.class);
