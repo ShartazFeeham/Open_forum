@@ -3,7 +3,6 @@ package com.open.forum.review.domain.events.comment;
 import com.open.forum.review.domain.events.BaseEvent;
 import com.open.forum.review.domain.events.Event;
 import com.open.forum.review.domain.model.comment.Comment;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,7 @@ import lombok.Setter;
  * It extends the BaseEvent class and provides additional information specific to comment events.
  * The COMMENT_EVENT constant is used to identify this type of event.
  */
-@Getter @Setter @Builder
+@Getter @Setter
 public class CommentEvent extends BaseEvent<Comment> {
 
     private static final String COMMENT_EVENT = "COMMENT_EVENT";

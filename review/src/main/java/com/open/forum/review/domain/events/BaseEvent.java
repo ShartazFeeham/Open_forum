@@ -2,7 +2,6 @@ package com.open.forum.review.domain.events;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,7 @@ import java.time.ZonedDateTime;
  * Base class for all events in the review service.
  * @param <T> The type of the event data.
  */
-@Builder @Getter @Setter
+@Getter @Setter
 public abstract class BaseEvent<T> {
     @NotNull
     private final Long postId;

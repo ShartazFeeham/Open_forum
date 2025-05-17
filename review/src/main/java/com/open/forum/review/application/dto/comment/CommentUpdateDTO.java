@@ -2,16 +2,9 @@ package com.open.forum.review.application.dto.comment;
 
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.shared.exception.EntityNotFoundException;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-@Getter
-@Setter
-@Builder
 public record CommentUpdateDTO(Long commentId, String content) {
 
     private static final Logger log = LoggerFactory.getLogger(CommentUpdateDTO.class);

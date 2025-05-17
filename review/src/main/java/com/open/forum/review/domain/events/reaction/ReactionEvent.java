@@ -2,9 +2,7 @@ package com.open.forum.review.domain.events.reaction;
 
 import com.open.forum.review.domain.events.BaseEvent;
 import com.open.forum.review.domain.events.Event;
-import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.reaction.Reaction;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +11,7 @@ import lombok.Setter;
  * It extends the BaseEvent class and provides additional information specific to reaction events.
  * The REACTION_EVENT constant is used to identify this type of event.
  */
-@Getter @Setter @Builder
+@Getter @Setter
 public class ReactionEvent extends BaseEvent<Reaction> {
 
     private static final String REACTION_EVENT = "REACTION_EVENT";

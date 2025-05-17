@@ -2,7 +2,6 @@ package com.open.forum.review.domain.events.reaction;
 
 import com.open.forum.review.domain.events.Event;
 import com.open.forum.review.domain.model.reaction.Reaction;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -12,7 +11,7 @@ import lombok.Setter;
  *
  * @see ReactionEvent
  */
-@Getter @Setter @Builder
+@Getter @Setter
 public class ReactionDeletedEvent extends ReactionEvent {
 
     public ReactionDeletedEvent(Reaction reaction) {
