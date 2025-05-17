@@ -1,5 +1,6 @@
 package com.open.forum.review.domain.events;
 
+import com.open.forum.review.shared.utility.ServerZonedDateTime;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -29,7 +30,7 @@ public abstract class BaseEvent<T> {
         this.postId = postId;
         this.userId = userId;
         this.eventName = event.getTitle();
-        this.publishedAt = ZonedDateTime.now();
+        this.publishedAt = ServerZonedDateTime.now();
         this.eventData = eventData;
         this.eventType = eventType;
         this.eventDescription = event.getDescription();

@@ -1,5 +1,6 @@
 package com.open.forum.review.presentation.models;
 
+import com.open.forum.review.shared.utility.ServerZonedDateTime;
 import org.slf4j.MDC;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,7 +17,7 @@ public class ResponseWrapper<R> {
 
     public ResponseEntity<BaseResponseModel<R>> result(Supplier<R> supplier, HttpStatus httpStatus) {
         final BaseResponseModel<R> baseResponseModel = new BaseResponseModel<>();
-        baseResponseModel.setRequestedAt(ZonedDateTime.now());
+        baseResponseModel.setRequestedAt(ServerZonedDateTime.now());
         final R result = getResult(supplier);
         final BaseResponseModel<R> response = finalizeBaseModel(baseResponseModel, result, httpStatus);
         return ResponseEntity.status(httpStatus).body(response);
@@ -25,7 +26,7 @@ public class ResponseWrapper<R> {
     private BaseResponseModel<R> finalizeBaseModel(BaseResponseModel<R> baseResponseModel, R result, HttpStatus httpStatus) {
         baseResponseModel.setData(result);
         baseResponseModel.setStatus(httpStatus);
-        baseResponseModel.setRespondedAt(ZonedDateTime.now());
+        baseResponseModel.setRespondedAt(ServerZonedDateTime.now());
         baseResponseModel.setResponseTimeInMillis(baseResponseModel.getRespondedAt().toInstant().toEpochMilli()
                 - baseResponseModel.getRequestedAt().toInstant().toEpochMilli());
         baseResponseModel.setTraceId(MDC.get("traceId"));

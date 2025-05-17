@@ -6,6 +6,7 @@ import com.open.forum.review.application.dto.comment.CommentUpdateDTO;
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentContent;
 import com.open.forum.review.domain.model.comment.CommentStatus;
+import com.open.forum.review.shared.utility.ServerZonedDateTime;
 
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ public class CommentMapper {
         final var builder = Comment.builder()
                 .commentId(dto.commentId())
                 .status(CommentStatus.PENDING)
-                .createdAt(ZonedDateTime.now())
+                .createdAt(ServerZonedDateTime.now())
                 .userId(dto.userId())
                 .isReply(dto.isReply())
                 .contents(new ArrayList<>(List.of(CommentContent.builder().content(dto.content()).build())));
@@ -50,7 +51,7 @@ public class CommentMapper {
         comment.getContents().add(CommentContent.builder()
                 .content(dto.content())
                 .commentId(dto.commentId())
-                .createdAt(ZonedDateTime.now())
+                .createdAt(ServerZonedDateTime.now())
                 .build());
         return comment;
     }

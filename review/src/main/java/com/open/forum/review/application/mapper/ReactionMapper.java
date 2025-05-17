@@ -5,6 +5,7 @@ import com.open.forum.review.application.dto.reaction.ReactionReadDTO;
 import com.open.forum.review.application.dto.reaction.ReactionUpdateDTO;
 import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionStatus;
+import com.open.forum.review.shared.utility.ServerZonedDateTime;
 
 import java.time.ZonedDateTime;
 
@@ -27,7 +28,7 @@ public class ReactionMapper {
                 .userId(dto.userId())
                 .reactionStatus(ReactionStatus.PENDING)
                 .reactionType(dto.reactionType())
-                .createdAt(ZonedDateTime.now())
+                .createdAt(ServerZonedDateTime.now())
                 .build();
     }
 
