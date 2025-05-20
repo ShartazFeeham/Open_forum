@@ -4,8 +4,6 @@ import com.open.forum.review.shared.PostPrivacy;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
-import java.util.Map;
-
 public interface PostServiceClient {
     /**
      * Retrieves the privacy settings of a post.
@@ -14,20 +12,4 @@ public interface PostServiceClient {
      * @return the privacy settings of the post
      */
     PostPrivacy getPostPrivacy(@NotNull @Positive Long postId);
-
-    /**
-     * Checks if a post exists.
-     *
-     * @param postId the ID of the post
-     * @return true if the post exists, false otherwise
-     */
-    boolean isPostExist(@NotNull @Positive Long postId);
-
-    /**
-     * Retrieves the details of a post.
-     *
-     * @param postId the ID of the post
-     * @return a map containing the details of the post
-     */
-    Map<String, Object> getPostById(@NotNull @Positive Long postId);
 }
