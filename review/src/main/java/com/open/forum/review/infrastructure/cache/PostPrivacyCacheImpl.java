@@ -3,7 +3,7 @@ package com.open.forum.review.infrastructure.cache;
 import com.open.forum.review.domain.cache.PostPrivacyCache;
 import com.open.forum.review.domain.external.client.PostServiceClient;
 import com.open.forum.review.infrastructure.cache.core.SingleReadCacheTemplate;
-import com.open.forum.review.infrastructure.external.PostPrivacyDatabaseImpl;
+import com.open.forum.review.infrastructure.external.PostPrivacyRepositoryImpl;
 import com.open.forum.review.shared.PostPrivacy;
 import jakarta.validation.constraints.NotNull;
 import org.redisson.api.RedissonClient;
@@ -17,7 +17,7 @@ public class PostPrivacyCacheImpl extends SingleReadCacheTemplate<Long, PostPriv
     private final Logger log = LoggerFactory.getLogger(PostPrivacyCacheImpl.class);
     private final PostServiceClient postServiceClient;
 
-    protected PostPrivacyCacheImpl(RedissonClient redissonClient, PostPrivacyDatabaseImpl postServiceClient) {
+    protected PostPrivacyCacheImpl(RedissonClient redissonClient, PostPrivacyRepositoryImpl postServiceClient) {
         super(redissonClient);
         this.postServiceClient = postServiceClient;
     }

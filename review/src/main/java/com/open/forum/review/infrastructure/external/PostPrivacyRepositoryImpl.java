@@ -8,11 +8,11 @@ import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PostPrivacyDatabaseImpl implements PostServiceClient {
+public class PostPrivacyRepositoryImpl implements PostServiceClient {
 
     private final PostPrivacyJpaRepository postPrivacyJpaRepository;
 
-    public PostPrivacyDatabaseImpl(PostPrivacyJpaRepository postPrivacyJpaRepository) {
+    public PostPrivacyRepositoryImpl(PostPrivacyJpaRepository postPrivacyJpaRepository) {
         this.postPrivacyJpaRepository = postPrivacyJpaRepository;
     }
 
@@ -28,5 +28,9 @@ public class PostPrivacyDatabaseImpl implements PostServiceClient {
                 .findById(postId)
                 .map(PostPrivacyEntity::getPostPrivacy)
                 .orElse(null);
+    }
+
+    public PostPrivacyEntity save(PostPrivacyEntity postPrivacyEntity) {
+        return postPrivacyJpaRepository.save(postPrivacyEntity);
     }
 }

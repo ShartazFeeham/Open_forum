@@ -7,6 +7,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.time.Duration;
+import java.util.Optional;
 
 /**
  * This interface defines a template for cache operations.
@@ -23,7 +24,7 @@ public abstract class CrudCacheTemplate<ID, VALUE> implements CacheableCrud<ID, 
     }
 
     abstract protected @NotNull String cacheKey(ID id);
-    abstract protected VALUE getFromSource(ID key);
+    abstract protected Optional<VALUE> getFromSource(ID key);
     abstract protected VALUE createToSource(VALUE value);
     abstract protected VALUE updateToSource(ID key, VALUE value);
     abstract protected VALUE deleteToSource(ID key);
@@ -40,22 +41,26 @@ public abstract class CrudCacheTemplate<ID, VALUE> implements CacheableCrud<ID, 
     }
 
     @Override
-    public VALUE read(ID id) {
+    public Optional<VALUE> read(ID id) {
         final String cacheKey = cacheKey(id);
         log.info("Cache key: {}", cacheKey);
         final RBucket<VALUE> bucket = redissonClient.getBucket(cacheKey);
         if (bucket.isExists()) {
             log.info("Cache hit for key {}: {}", cacheKey, bucket.get());
-            return bucket.get();
+            return Optional.of(bucket.get());
         }
         log.info("Cache miss for key {}: fetching from source", cacheKey);
-        final VALUE value = getFromSource(id);
+        final Optional<VALUE> value = getFromSource(id);
+        if (value.isEmpty()) {
+            log.info("Item not found in source");
+            return Optional.empty();
+        }
         log.info("Item fetched from source: {}", value);
-        bucket.set(value);
+        bucket.set(value.get());
         bucket.expire(Duration.ofSeconds(expirationTimeInSeconds()));
         log.info("Storing the item in the cache with key {}: {}, with expiration time: {}",
                 cacheKey, value, expirationTimeInSeconds());
-        return value;
+        return Optional.empty();
     }
 
     @Override
