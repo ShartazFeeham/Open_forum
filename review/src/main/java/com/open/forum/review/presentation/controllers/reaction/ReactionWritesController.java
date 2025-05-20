@@ -29,9 +29,9 @@ public class ReactionWritesController {
 
     @Operation(summary = "Create a new reaction", description = "Adds a new reaction to a post or comment.")
     @ApiResponses({
-        @ApiResponse(responseCode = "201", description = "Reaction created successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request in case of validation error.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "201", description = "Reaction created successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request in case of validation error.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @PostMapping
     public ResponseEntity<?> createReaction(@Valid @RequestBody ReactionCreateDTO dto) {
@@ -43,10 +43,10 @@ public class ReactionWritesController {
 
     @Operation(summary = "Update an existing reaction", description = "Updates the details of an existing reaction.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reaction updated successfully"),
-        @ApiResponse(responseCode = "400", description = "Bad request in case of validation error.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "404", description = "Reaction not found with the given ID.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reaction updated successfully"),
+            @ApiResponse(responseCode = "400", description = "Bad request in case of validation error.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "404", description = "Reaction not found with the given ID.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @PutMapping
     public ResponseEntity<?> updateReaction(@Valid @RequestBody ReactionUpdateDTO dto) {
@@ -58,9 +58,9 @@ public class ReactionWritesController {
 
     @Operation(summary = "Delete a reaction by its ID", description = "Deletes a reaction by its unique identifier.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reaction deleted successfully"),
-        @ApiResponse(responseCode = "404", description = "Reaction not found with the given ID.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reaction deleted successfully"),
+            @ApiResponse(responseCode = "404", description = "Reaction not found with the given ID.", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error.", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @DeleteMapping("/{reactionId}")
     public ResponseEntity<?> deleteReaction(@NotNull @Positive @PathVariable Long reactionId) {

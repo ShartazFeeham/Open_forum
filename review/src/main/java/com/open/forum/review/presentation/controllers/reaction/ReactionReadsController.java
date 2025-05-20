@@ -29,9 +29,9 @@ public class ReactionReadsController {
 
     @Operation(summary = "Read a reaction by its ID", description = "Fetches a reaction by its unique identifier.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reaction fetched successfully"),
-        @ApiResponse(responseCode = "404", description = "Reaction not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reaction fetched successfully"),
+            @ApiResponse(responseCode = "404", description = "Reaction not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @GetMapping("/{reactionId}")
     public ResponseEntity<?> readReaction(@NotNull @Positive @PathVariable Long reactionId) {
@@ -40,9 +40,9 @@ public class ReactionReadsController {
 
     @Operation(summary = "Read reactions by post ID", description = "Fetches all reactions for a specific post.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reactions fetched successfully"),
-        @ApiResponse(responseCode = "404", description = "Post not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reactions fetched successfully"),
+            @ApiResponse(responseCode = "404", description = "Post not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @GetMapping("/post/{postId}")
     public ResponseEntity<?> readReactionsByPost(@NotNull @Positive @PathVariable Long postId) {
@@ -51,9 +51,9 @@ public class ReactionReadsController {
 
     @Operation(summary = "Read reaction count by post ID", description = "Fetches the count of reactions for a specific post.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reaction count fetched successfully"),
-        @ApiResponse(responseCode = "404", description = "Post not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reaction count fetched successfully"),
+            @ApiResponse(responseCode = "404", description = "Post not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @GetMapping("/post/{postId}/count")
     public ResponseEntity<?> readReactionsCountByPost(@NotNull @Positive @PathVariable Long postId) {
@@ -62,9 +62,9 @@ public class ReactionReadsController {
 
     @Operation(summary = "Read reactions by comment ID", description = "Fetches all reactions for a specific comment.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reactions fetched successfully"),
-        @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reactions fetched successfully"),
+            @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @GetMapping("/comment/{commentId}")
     public ResponseEntity<?> readReactionsByComment(@NotNull @Positive @PathVariable Long commentId) {
@@ -73,9 +73,9 @@ public class ReactionReadsController {
 
     @Operation(summary = "Read reaction count by comment ID", description = "Fetches the count of reactions for a specific comment.")
     @ApiResponses({
-        @ApiResponse(responseCode = "200", description = "Reaction count fetched successfully"),
-        @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
-        @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
+            @ApiResponse(responseCode = "200", description = "Reaction count fetched successfully"),
+            @ApiResponse(responseCode = "404", description = "Comment not found", content = @Content(schema = @Schema(implementation = ErrorResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Internal server error", content = @Content(schema = @Schema(example = "An internal server error response")))
     })
     @GetMapping("/comment/{commentId}/count")
     public ResponseEntity<?> readReactionsCountByComment(@NotNull @Positive @PathVariable Long commentId) {
