@@ -1,5 +1,11 @@
 version: '3'
 services:
+
+  other_redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
   other_external_rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
