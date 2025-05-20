@@ -5,9 +5,9 @@ import com.open.forum.review.infrastructure.repository.post.PostPrivacyEntity;
 import com.open.forum.review.infrastructure.repository.post.PostPrivacyJpaRepository;
 import com.open.forum.review.shared.PostPrivacy;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 public class PostPrivacyDatabaseImpl implements PostServiceClient {
 
     private final PostPrivacyJpaRepository postPrivacyJpaRepository;

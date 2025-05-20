@@ -1,6 +1,7 @@
 package com.open.forum.review.infrastructure.cache;
 
 import com.open.forum.review.domain.cache.UserExistenceCache;
+import com.open.forum.review.shared.helper.TokenExtractor;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +15,7 @@ public class UserExistenceCacheImpl implements UserExistenceCache {
      */
     @Override
     public Boolean isUserExist(@NotNull Long userId) {
-        return null;
+        return TokenExtractor.matchUserId(userId);
     }
 
     /**
@@ -25,6 +26,6 @@ public class UserExistenceCacheImpl implements UserExistenceCache {
      */
     @Override
     public Boolean isUserExist(@NotNull String username) {
-        return null;
+        return TokenExtractor.matchUserId(TokenExtractor.extractUserId(username));
     }
 }
