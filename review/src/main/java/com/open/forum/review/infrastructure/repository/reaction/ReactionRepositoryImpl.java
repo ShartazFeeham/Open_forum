@@ -1,8 +1,10 @@
-package com.open.forum.review.infrastructure.repository;
+package com.open.forum.review.infrastructure.repository.reaction;
 
 import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionType;
 import com.open.forum.review.domain.repository.ReactionRepository;
+import com.open.forum.review.infrastructure.cache.core.CrudCacheTemplate;
+import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -10,15 +12,20 @@ import java.util.Map;
 import java.util.Optional;
 
 @Repository
-public class ReactionRepositoryImpl implements ReactionRepository {
+public class ReactionRepositoryImpl extends CrudCacheTemplate<Long, Reaction> implements ReactionRepository {
+
+    protected ReactionRepositoryImpl(RedissonClient redissonClient) {
+        super(redissonClient);
+    }
+
     /**
-     * Saves a reaction to a comment or post.
+     * Saves a new reaction.
      *
      * @param reaction the reaction to save
      */
     @Override
     public void saveReaction(Reaction reaction) {
-
+        this.create(reaction.getReactionId(), reaction);
     }
 
     /**
@@ -29,7 +36,27 @@ public class ReactionRepositoryImpl implements ReactionRepository {
      */
     @Override
     public Optional<Reaction> findReactionById(Long reactionId) {
-        return Optional.empty();
+        return this.read(reactionId);
+    }
+
+    /**
+     * Updates an existing reaction.
+     *
+     * @param reaction the reaction to update
+     */
+    @Override
+    public void updateReaction(Reaction reaction) {
+        this.update(reaction.getReactionId(), reaction);
+    }
+
+    /**
+     * Deletes a reaction by its ID.
+     *
+     * @param reactionId the ID of the reaction to delete
+     */
+    @Override
+    public void deleteReaction(Long reactionId) {
+        this.delete(reactionId);
     }
 
     /**
@@ -78,23 +105,34 @@ public class ReactionRepositoryImpl implements ReactionRepository {
         return Map.of();
     }
 
-    /**
-     * Updates an existing reaction.
-     *
-     * @param reaction the reaction to update
-     */
     @Override
-    public void updateReaction(Reaction reaction) {
-
+    protected Optional<Reaction> getFromSource(Long key) {
+        return Optional.empty();
     }
 
-    /**
-     * Deletes a reaction by its ID.
-     *
-     * @param reactionId the ID of the reaction to delete
-     */
     @Override
-    public void deleteReaction(Long reactionId) {
+    protected Reaction createToSource(Reaction reaction) {
+        return null;
+    }
 
+    @Override
+    protected Reaction updateToSource(Long key, Reaction reaction) {
+        return null;
+    }
+
+    @Override
+    protected Reaction deleteToSource(Long key) {
+        return null;
+    }
+
+    @Override
+    protected Long expirationTimeInSeconds() {
+        // Cache expiration time is set to 5 minutes (300 seconds)
+        return 300L;
+    }
+
+    @Override
+    protected String cacheKey(Long reactionId) {
+        return "reaction-crud:" + reactionId;
     }
 }
