@@ -1,6 +1,5 @@
 package com.open.forum.review.infrastructure.events;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.forum.review.domain.events.publisher.ReactionEventPublisher;
 import com.open.forum.review.domain.events.reaction.ReactionEvent;
 import com.open.forum.review.infrastructure.events.core.AbstractProducer;
@@ -12,12 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class ReactionEventPublisherImpl extends AbstractProducer<String, String, ReactionEvent> implements ReactionEventPublisher {
 
-    private final ObjectMapper objectMapper;
     private static final Logger log = LoggerFactory.getLogger(ReactionEventPublisherImpl.class);
 
-    protected ReactionEventPublisherImpl(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    protected ReactionEventPublisherImpl(KafkaTemplate<String, String> kafkaTemplate) {
         super(kafkaTemplate);
-        this.objectMapper = objectMapper;
     }
 
     /**
