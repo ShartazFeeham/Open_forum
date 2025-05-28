@@ -28,6 +28,10 @@ services:
     extends:
       file: docker-storage-configs.yml
       service: storage-post-service-pg-db
+  review-service-pg-db:
+    extends:
+      file: docker-storage-configs.yml
+      service: storage-review-service-pg-db
   pg-admin-postgres-ui:
     extends:
       file: docker-storage-configs.yml
@@ -77,5 +81,6 @@ volumes:
   elasticsearch_data:
     driver: local
   post-service-pg-db_local_data:
+  review-service-pg-db_local_data:
   pgadmin-data:
 

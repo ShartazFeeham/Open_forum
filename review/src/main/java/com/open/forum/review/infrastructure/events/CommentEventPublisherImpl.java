@@ -1,6 +1,5 @@
 package com.open.forum.review.infrastructure.events;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.forum.review.domain.events.comment.CommentEvent;
 import com.open.forum.review.domain.events.publisher.CommentEventPublisher;
 import com.open.forum.review.infrastructure.events.core.AbstractProducer;
@@ -12,13 +11,10 @@ import org.springframework.stereotype.Service;
 @Service
 public class CommentEventPublisherImpl extends AbstractProducer<String, String, CommentEvent> implements CommentEventPublisher {
 
-    private final ObjectMapper objectMapper;
     private static final Logger log = LoggerFactory.getLogger(CommentEventPublisherImpl.class);
 
-
-    protected CommentEventPublisherImpl(KafkaTemplate<String, String> kafkaTemplate, ObjectMapper objectMapper) {
+    protected CommentEventPublisherImpl(KafkaTemplate<String, String> kafkaTemplate) {
         super(kafkaTemplate);
-        this.objectMapper = objectMapper;
     }
 
     @Override

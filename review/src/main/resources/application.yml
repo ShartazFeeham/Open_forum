@@ -1,0 +1,67 @@
+server:
+  port: 8200
+
+spring:
+  application:
+    name: review-service
+  sql:
+    init:
+      mode: always
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+        use_sql_comments: true # Adds comments to SQL queries
+        jdbc:
+          batch_size: 30 # Batch size for JDBC operations
+        order_inserts: true # Optimizes insert statements
+        order_updates: true # Optimizes update statements
+        generate_statistics: true # Enables Hibernate statistics
+
+  # Database configuration
+  datasource:
+    url: jdbc:postgresql://localhost:5433/review_db
+    username: review_db_user
+    password: review_db_password
+
+    # Connection pool configuration
+    hikari:
+      connection-timeout: 600000 # 10 minutes
+      maximum-pool-size: 3       # Connection limit
+      auto-commit: false         # Let us handle transactions
+      idle-timeout: 1800000      # 30 minutes
+      minimum-idle: 2            # Minimum number of idle connections in the pool
+
+local:
+  kafka:
+    properties:
+
+      producer:
+        acks: all
+        retries: 3
+        retry.backoff.ms: 1000
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        value.serializer: org.apache.kafka.common.serialization.StringSerializer
+
+      consumer:
+        bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+        retry-attempts: 3
+        retry-interval: 1000
+        retry-backoff-multiplier: 2
+        retry-backoff-max-interval: 60000
+
+      admin:
+        enabled: true
+
+      dlq:
+        prefix: ""
+        suffix: "-DLQ"
+
+      external:
+        post-privacy-topic: "post-privacy"
+        post-privacy-listener-group: "post-privacy-listener-group"

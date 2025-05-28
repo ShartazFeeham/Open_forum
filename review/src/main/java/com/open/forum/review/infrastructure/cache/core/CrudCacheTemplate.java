@@ -10,25 +10,66 @@ import java.time.Duration;
 import java.util.Optional;
 
 /**
- * This interface defines a template for cache operations.
+ * This interface defines a template for cache operations. It provides methods for creating, reading, updating,
+ * and deleting cached objects. Any class that extends this template must implement the methods to related to
+ * the source of the cached objects. For simple read operations, consider using {@link SingleReadCacheTemplate} instead.
  * @param <ID> the type of the identifier for the cached object
  * @param <VALUE> the type of the cached object
  */
 public abstract class CrudCacheTemplate<ID, VALUE> implements CacheableCrud<ID, VALUE> {
 
+    /**
+     * Generates a cache key based on the identifier.
+     * @param id the identifier of the cached object
+     * @return the cache key as a String
+     */
+    abstract protected @NotNull String cacheKey(ID id);
+
+    /**
+     * Retrieves an object from the source based on the identifier.
+     * @param key the identifier of the cached object
+     * @return an Optional containing the cached object if found, or empty if not found
+     */
+    abstract protected Optional<VALUE> getFromSource(ID key);
+
+    /**
+     * Creates a new object in the source based on the provided value.
+     * @param value the value to create in the source
+     * @return the created object
+     */
+    abstract protected VALUE createToSource(VALUE value);
+
+    /**
+     * Updates an existing object in the source based on the provided identifier and value.
+     * @param key the identifier of the cached object
+     * @param value the value to update in the source
+     * @return the updated object
+     */
+    abstract protected VALUE updateToSource(ID key, VALUE value);
+
+    /**
+     * Deletes an object from the source based on the provided identifier.
+     * @param key the identifier of the cached object
+     * @return the deleted object
+     */
+    abstract protected VALUE deleteToSource(ID key);
+
+    /**
+     * Returns the expiration time for cached objects in seconds.
+     * @return the expiration time in seconds
+     */
+    abstract protected @NotNull Long expirationTimeInSeconds();
+
     private static final Logger log = LoggerFactory.getLogger(CrudCacheTemplate.class);
     protected final RedissonClient redissonClient;
 
+    /**
+     * Constructor for the CrudCacheTemplate.
+     * @param redissonClient the Redisson client used for cache operations
+     */
     protected CrudCacheTemplate(RedissonClient redissonClient) {
         this.redissonClient = redissonClient;
     }
-
-    abstract protected @NotNull String cacheKey(ID id);
-    abstract protected Optional<VALUE> getFromSource(ID key);
-    abstract protected VALUE createToSource(VALUE value);
-    abstract protected VALUE updateToSource(ID key, VALUE value);
-    abstract protected VALUE deleteToSource(ID key);
-    abstract protected @NotNull Long expirationTimeInSeconds();
 
     // It works with a lazy loading strategy, so it will not add an item in the cache while creating it in the source
     @Override

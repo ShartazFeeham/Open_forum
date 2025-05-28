@@ -1,5 +1,6 @@
 package com.open.forum.review.infrastructure.events.core;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.forum.review.domain.events.BaseEvent;
 import com.open.forum.review.domain.events.comment.CommentEvent;
 import jakarta.validation.constraints.NotNull;
@@ -29,11 +30,20 @@ public abstract class AbstractProducer <@NotNull K, @NotNull V, @NotNull E exten
         implements EventProducer<K, V, E> {
 
     private final KafkaTemplate<K, V> kafkaTemplate;
+    protected final ObjectMapper objectMapper = new ObjectMapper();
 
     protected AbstractProducer(KafkaTemplate<K, V> kafkaTemplate) {
         this.kafkaTemplate = kafkaTemplate;
     }
 
+    /**
+     * Sends an event to Kafka.
+     *
+     * @param object the event to be sent
+     * @param onSuccess callback to be executed on successful send
+     * @param onFailure callback to be executed on failure
+     * @return a CompletableFuture that will complete with the result of the send operation
+     */
     public CompletableFuture<SendResult<K, V>> send(E object, Consumer<SendResult<K, V>> onSuccess,
                                                     Consumer<Throwable> onFailure) {
         V value = null;
@@ -53,7 +63,7 @@ public abstract class AbstractProducer <@NotNull K, @NotNull V, @NotNull E exten
         });
     }
 
-    public ProducerRecord<K, V> buildProducerRecord(E event, V value) {
+    protected ProducerRecord<K, V> buildProducerRecord(E event, V value) {
         List<Header> recordHeaders = new ArrayList<>();
 
         String traceId =  UUID.randomUUID().toString().substring(0, 5);
