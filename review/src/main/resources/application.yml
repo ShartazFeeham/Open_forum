@@ -1,0 +1,20 @@
+local:
+  kafka:
+    properties:
+      producer:
+        acks: all
+        retries: 3
+        retry.backoff.ms: 1000
+        key.serializer: org.apache.kafka.common.serialization.StringSerializer
+        value.serializer: org.apache.kafka.common.serialization.StringSerializer
+      consumer:
+        bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+        retry-attempts: 3
+        retry-interval: 1000
+        retry-backoff-multiplier: 2
+        retry-backoff-max-interval: 60000
+      admin:
+        enabled: true
+      dlq:
+        prefix: ""
+        suffix: "-DLQ"
