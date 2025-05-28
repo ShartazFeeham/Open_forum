@@ -9,7 +9,10 @@ import org.slf4j.LoggerFactory;
 import java.time.Duration;
 
 /**
- * This interface defines a template for cache operations.
+ * This interface defines a template for cache operations that allows reading a single item from the cache.
+ * There is no create, update, or delete operations in this template. Preferably better to use with external clients.
+ * For more flexible cache operations, consider using {@link CrudCacheTemplate}.
+ *
  * @param <ID> the type of the identifier for the cached object
  * @param <VALUE> the type of the cached object
  */
@@ -26,6 +29,12 @@ public abstract class SingleReadCacheTemplate<ID, VALUE> {
     abstract protected VALUE getFromSource(ID key);
     abstract protected @NotNull Long expirationTimeInSeconds();
 
+    /**
+     * Reads an item from the cache or fetches it from the source if not found in the cache.
+     *
+     * @param id the identifier of the item to read
+     * @return the cached item, or the item fetched from the source if not found in the cache
+     */
     public VALUE read(ID id) {
         final String cacheKey = cacheKey(id);
         log.info("Cache key: {}", cacheKey);
