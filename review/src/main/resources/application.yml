@@ -19,16 +19,13 @@ spring:
         use_sql_comments: true # Adds comments to SQL queries
         jdbc:
           batch_size: 30 # Batch size for JDBC operations
-        cache:
-          use_second_level_cache: true # Enables second-level cache
-          use_query_cache: false
         order_inserts: true # Optimizes insert statements
         order_updates: true # Optimizes update statements
         generate_statistics: true # Enables Hibernate statistics
 
   # Database configuration
   datasource:
-    url: jdbc:postgresql://localhost:5432/review_db
+    url: jdbc:postgresql://localhost:5433/review_db
     username: review_db_user
     password: review_db_password
 

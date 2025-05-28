@@ -14,6 +14,20 @@ services:
     volumes:
       - post-service-pg-db_local_data:/var/lib/postgresql/data
 
+  # Postgres database for post-service
+  storage-review-service-pg-db:
+    image: postgres:14.15-alpine3.20
+    container_name: review-service-pg-db
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_DB: review_db
+      POSTGRES_USER: review_db_user
+      POSTGRES_PASSWORD: review_db_password
+    volumes:
+      - review-service-pg-db_local_data:/var/lib/postgresql/data
+
   # PG Admin for postgres database UI
   storage-pg-admin-postgres-ui:
     image: dpage/pgadmin4
