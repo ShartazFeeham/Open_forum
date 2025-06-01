@@ -2,7 +2,7 @@ version: "3.8"
 services:
   open_forum_config-server:
     image: feeham/open_forum_configserver:latest
-    container_name: OPEN_FORUM_CLOUD-config-server
+    container_name: config-server
     ports:
       - "8888:8888"
     extends:
@@ -10,14 +10,14 @@ services:
       service: common-config-initial
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
-      interval: 3s
-      timeout: 1s
-      retries: 50
-      start_period: 2s
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   open_forum_discovery-server:
     image: feeham/open_forum_discoveryserver:latest
-    container_name: OPEN_FORUM_CLOUD-discovery-server
+    container_name: discovery-server
     ports:
       - "7777:7777"
     extends:
@@ -25,14 +25,14 @@ services:
       service: common-config-after-config-server
     healthcheck:
       test: "curl --fail --silent localhost:7777/actuator/health/readiness | grep UP || exit 1"
-      interval: 3s
-      timeout: 1s
-      retries: 50
-      start_period: 2s
+      interval: 20s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
 
   open_forum_gateway:
     image: feeham/open_forum_gateway:latest
-    container_name: OPEN_FORUM_CLOUD-gateway
+    container_name: api-gateway
     ports:
       - "9999:9999"
     environment:

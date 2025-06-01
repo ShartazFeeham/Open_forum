@@ -50,14 +50,6 @@ spring:
       ddl-auto: update
     show-sql: true
 
-  # RabbitMQ configuration
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    connection-timeout: 10s
-
 # Service registry config
 eureka:
   instance:
