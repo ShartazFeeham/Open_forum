@@ -1,0 +1,16 @@
+organization:
+  name: "Kafka Projects - Open Forum"
+
+database:
+  host: "postgresql"
+  port: 5432
+  name: "conductor_db"
+  username: "conductor"
+  password: "password"
+
+clusters:
+  - id: "Open-Forum"
+    name: "Open Forum"
+    bootstrapServers: "kafka1:19092,kafka2:19092,kafka3:19092"
+    schemaRegistry:
+      url: "http://schema-registry:3690"
