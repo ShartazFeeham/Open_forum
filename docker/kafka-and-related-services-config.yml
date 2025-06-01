@@ -129,9 +129,6 @@ services:
         source: "./kafka-ui-helper-config.yml"
         target: /opt/conduktor/platform-config.yaml
         read_only: true
-    extends:
-      file: config-prefixes.yml
-      service: common-config-initial
     environment:
       CDK_IN_CONF_FILE: /opt/conduktor/platform-config.yaml
       ADMIN_EMAIL: admin@admin.com

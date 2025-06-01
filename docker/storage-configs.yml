@@ -1,9 +1,9 @@
-version: '3'
+version: '3.8'
 services:
   # Postgres database for post-service
   storage-post-service-pg-db:
     image: postgres:14.15-alpine3.20
-    container_name: post-service-pg-db
+    container_name: storage-postgres-for-post-service
     restart: always
     ports:
       - "5432:5432"
@@ -17,7 +17,7 @@ services:
   # Postgres database for post-service
   storage-review-service-pg-db:
     image: postgres:14.15-alpine3.20
-    container_name: review-service-pg-db
+    container_name: storage-postgres-for-review-service
     restart: always
     ports:
       - "5433:5432"
@@ -28,18 +28,12 @@ services:
     volumes:
       - review-service-pg-db_local_data:/var/lib/postgresql/data
 
-  # PG Admin for postgres database UI
-  storage-pg-admin-postgres-ui:
-    image: dpage/pgadmin4
-    container_name: pgadmin4_container
-    restart: always
+  storage-redis:
+    image: redis
     ports:
-      - "8088:80"
-    depends_on:
-      - post-service-pg-db
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    volumes:
-      - pgadmin-data:/var/lib/pgadmin
+      - "6379:6379"
 
+networks:
+  open-forum-network:
+    name: open-forum-network
+    external: true

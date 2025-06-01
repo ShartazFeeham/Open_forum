@@ -1,41 +1,43 @@
 version: "3.8"
 name: "open-forum"
 services:
-  # Open forum services
-  config-server:
+  # Open forum cloud
+  open-forum-cloud-config-server:
     extends:
       file: open-forum-services-config.yml
-      service: micro_forum_config-server
-  discovery-server:
+      service: open_forum_config-server
+  open-forum-cloud-discovery-server:
     extends:
       file: open-forum-services-config.yml
-      service: micro_forum_discovery-server
-  posts:
+      service: open_forum_discovery-server
+  open-forum-cloud-gateway:
     extends:
       file: open-forum-services-config.yml
-      service: micro_forum_posts
-  notifications:
+      service: open_forum_gateway
+
+  # Open forum core
+  open-forum-core-posts:
     extends:
       file: open-forum-services-config.yml
-      service: micro_forum_notifications
-  gateway:
+      service: open_forum_posts
+  open-forum-core-notifications:
     extends:
       file: open-forum-services-config.yml
-      service: micro_forum_gateway
+      service: open_forum_notifications
 
   # Storages
   post-service-pg-db:
     extends:
-      file: database-configs.yml
+      file: storage-configs.yml
       service: storage-post-service-pg-db
   review-service-pg-db:
     extends:
-      file: database-configs.yml
+      file: storage-configs.yml
       service: storage-review-service-pg-db
-  pg-admin-postgres-ui:
+  redis:
     extends:
-      file: database-configs.yml
-      service: storage-pg-admin-postgres-ui
+      file: storage-configs.yml
+      service: storage-redis
 
   # Observability
   elasticsearch_for_logs:
@@ -63,19 +65,45 @@ services:
       file: observability-and-related-configs.yml
       service: observability_grafana
 
+  # Events related services
+  zookeeper:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: zookeeper
+  kafka1:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: kafka1
+  kafka2:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: kafka2
+  kafka3:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: kafka3
+  schema-registry:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: schema-registry
+  postgresql:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: postgresql
+  conduktor-console:
+    extends:
+      file: kafka-and-related-services-config.yml
+      service: conduktor-console
+
   # Other external services
-  rabbitmq:
+  other_external_rabbitmq:
     extends:
       file: other-services-config.yml
       service: other_external_rabbitmq
-  keycloak:
+  other_external_keycloak:
     extends:
       file: other-services-config.yml
       service: other_external_keycloak
-  redis:
-    extends:
-      file: other-services-config.yml
-      service: other_redis
 
 volumes:
   elasticsearch_data:

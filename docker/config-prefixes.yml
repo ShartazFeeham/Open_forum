@@ -10,7 +10,7 @@ services:
     extends:
       service: common-config-initial
     depends_on:
-      config-server:
+      open-forum-cloud-config-server:
         condition: service_healthy
     environment:
       SPRING_CONFIG_IMPORT: optional:configserver:http://config-server:8888/
@@ -19,7 +19,7 @@ services:
     extends:
       service: common-config-after-config-server
     depends_on:
-      discovery-server:
+      open-forum-cloud-discovery-server:
         condition: service_healthy
     environment:
       EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://discovery-server:7777/eureka/

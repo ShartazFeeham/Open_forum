@@ -1,6 +1,6 @@
 version: "3.8"
 services:
-  micro_forum_config-server:
+  open_forum_config-server:
     image: feeham/open_forum_configserver:latest
     container_name: config-server
     ports:
@@ -10,12 +10,12 @@ services:
       service: common-config-initial
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 20
-      start_period: 10s
+      interval: 3s
+      timeout: 1s
+      retries: 50
+      start_period: 2s
 
-  micro_forum_discovery-server:
+  open_forum_discovery-server:
     image: feeham/open_forum_discoveryserver:latest
     container_name: discovery-server
     ports:
@@ -25,12 +25,12 @@ services:
       service: common-config-after-config-server
     healthcheck:
       test: "curl --fail --silent localhost:7777/actuator/health/readiness | grep UP || exit 1"
-      interval: 20s
-      timeout: 5s
-      retries: 20
-      start_period: 10s
+      interval: 3s
+      timeout: 1s
+      retries: 50
+      start_period: 2s
 
-  micro_forum_posts:
+  open_forum_posts:
     image: feeham/open_forum_posts:latest
     container_name: posts
     ports:
@@ -43,7 +43,7 @@ services:
       file: config-prefixes.yml
       service: common-config-after-discovery-server
 
-  micro_forum_notifications:
+  open_forum_notifications:
     image: feeham/open_forum_notification:latest
     container_name: notifications
     ports:
@@ -52,7 +52,7 @@ services:
       file: config-prefixes.yml
       service: common-config-after-discovery-server
 
-  micro_forum_gateway:
+  open_forum_gateway:
     image: feeham/open_forum_gateway:latest
     container_name: gateway
     ports:
@@ -62,3 +62,8 @@ services:
     extends:
       file: config-prefixes.yml
       service: common-config-after-discovery-server
+
+networks:
+  open-forum-network:
+    name: open-forum-network
+    external: true
