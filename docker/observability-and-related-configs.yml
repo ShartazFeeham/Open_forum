@@ -4,7 +4,7 @@ services:
 
   observability_elasticsearch_for_logs:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.3.3
-    container_name: elasticsearch
+    container_name: OBSERVABILITY-elasticsearch
     environment:
       - bootstrap.memory_lock=true  # Enables memory locking for performance and stability.
       - "ES_JAVA_OPTS=-Xms512m -Xmx512m"  # Configures the JVM heap size for Elasticsearch.
@@ -17,7 +17,7 @@ services:
 
   observability_kibana:
     image: docker.elastic.co/kibana/kibana:8.3.3
-    container_name: kibana
+    container_name: OBSERVABILITY-kibana
     ports:
       - "5601:5601"  # Maps port 5601 on the host to port 5601 on the container for accessing Kibana UI.
     environment:
@@ -28,7 +28,7 @@ services:
 
   observability_logstash:
     image: docker.elastic.co/logstash/logstash:8.3.3
-    container_name: logstash
+    container_name: OBSERVABILITY-logstash
     volumes: # Mounts volumes for configuration and pipeline data.
       - ./../observability/logging/config/logstash.yml:/usr/share/logstash/config/logstash.yml:ro  # Mounts the configuration file in read-only mode.
       - ./../observability/logging/config/pipeline:/usr/share/logstash/pipeline:ro  # Mounts the pipeline directory in read-only mode.
@@ -44,7 +44,7 @@ services:
 
   observability_filebeat:
     image: docker.elastic.co/beats/filebeat:8.3.3
-    container_name: filebeat
+    container_name: OBSERVABILITY-filebeat
     user: root  # Run as root if necessary for file access
     command: [ "filebeat", "-e", "--strict.perms=false" ]
     volumes:
@@ -59,7 +59,7 @@ services:
   # Monitoring
   observability_prometheus:
     image: prom/prometheus:v2.44.0
-    container_name: prometheus
+    container_name: OBSERVABILITY-prometheus
     ports:
       - "9090:9090"
     volumes:
@@ -67,7 +67,7 @@ services:
 
   observability_grafana:
     image: grafana/grafana:9.5.2
-    container_name: grafana
+    container_name: OBSERVABILITY-grafana
     ports:
       - "3000:3000"
     restart: unless-stopped

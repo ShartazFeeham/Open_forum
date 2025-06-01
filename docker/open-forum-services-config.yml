@@ -2,7 +2,7 @@ version: "3.8"
 services:
   open_forum_config-server:
     image: feeham/open_forum_configserver:latest
-    container_name: config-server
+    container_name: OPEN_FORUM_CLOUD-config-server
     ports:
       - "8888:8888"
     extends:
@@ -17,7 +17,7 @@ services:
 
   open_forum_discovery-server:
     image: feeham/open_forum_discoveryserver:latest
-    container_name: discovery-server
+    container_name: OPEN_FORUM_CLOUD-discovery-server
     ports:
       - "7777:7777"
     extends:
@@ -30,9 +30,20 @@ services:
       retries: 50
       start_period: 2s
 
+  open_forum_gateway:
+    image: feeham/open_forum_gateway:latest
+    container_name: OPEN_FORUM_CLOUD-gateway
+    ports:
+      - "9999:9999"
+    environment:
+      SPRING_PROFILES_ACTIVE: "testing"
+    extends:
+      file: config-prefixes.yml
+      service: common-config-after-discovery-server
+
   open_forum_posts:
     image: feeham/open_forum_posts:latest
-    container_name: posts
+    container_name: OPEN_FORUM_CORE-posts
     ports:
       - "3100:3100"
     environment:
@@ -45,20 +56,9 @@ services:
 
   open_forum_notifications:
     image: feeham/open_forum_notification:latest
-    container_name: notifications
+    container_name: OPEN_FORUM_CORE-notifications
     ports:
       - "3400:3400"
-    extends:
-      file: config-prefixes.yml
-      service: common-config-after-discovery-server
-
-  open_forum_gateway:
-    image: feeham/open_forum_gateway:latest
-    container_name: gateway
-    ports:
-      - "9999:9999"
-    environment:
-      SPRING_PROFILES_ACTIVE: "testing"
     extends:
       file: config-prefixes.yml
       service: common-config-after-discovery-server
