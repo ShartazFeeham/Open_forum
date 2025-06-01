@@ -6,7 +6,7 @@ services:
     ports:
       - "8888:8888"
     extends:
-      file: docker-general-configs.yml
+      file: config-prefixes.yml
       service: common-config-initial
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
@@ -21,7 +21,7 @@ services:
     ports:
       - "7777:7777"
     extends:
-      file: docker-general-configs.yml
+      file: config-prefixes.yml
       service: common-config-after-config-server
     healthcheck:
       test: "curl --fail --silent localhost:7777/actuator/health/readiness | grep UP || exit 1"
@@ -40,7 +40,7 @@ services:
     depends_on:
       - post-service-pg-db
     extends:
-      file: docker-general-configs.yml
+      file: config-prefixes.yml
       service: common-config-after-discovery-server
 
   micro_forum_notifications:
@@ -49,7 +49,7 @@ services:
     ports:
       - "3400:3400"
     extends:
-      file: docker-general-configs.yml
+      file: config-prefixes.yml
       service: common-config-after-discovery-server
 
   micro_forum_gateway:
@@ -60,5 +60,5 @@ services:
     environment:
       SPRING_PROFILES_ACTIVE: "testing"
     extends:
-      file: docker-general-configs.yml
+      file: config-prefixes.yml
       service: common-config-after-discovery-server

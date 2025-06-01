@@ -4,77 +4,77 @@ services:
   # Open forum services
   config-server:
     extends:
-      file: docker-micro-forum-configs.yml
+      file: open-forum-services-config.yml
       service: micro_forum_config-server
   discovery-server:
     extends:
-      file: docker-micro-forum-configs.yml
+      file: open-forum-services-config.yml
       service: micro_forum_discovery-server
   posts:
     extends:
-      file: docker-micro-forum-configs.yml
+      file: open-forum-services-config.yml
       service: micro_forum_posts
   notifications:
     extends:
-      file: docker-micro-forum-configs.yml
+      file: open-forum-services-config.yml
       service: micro_forum_notifications
   gateway:
     extends:
-      file: docker-micro-forum-configs.yml
+      file: open-forum-services-config.yml
       service: micro_forum_gateway
 
   # Storages
   post-service-pg-db:
     extends:
-      file: docker-storage-configs.yml
+      file: database-configs.yml
       service: storage-post-service-pg-db
   review-service-pg-db:
     extends:
-      file: docker-storage-configs.yml
+      file: database-configs.yml
       service: storage-review-service-pg-db
   pg-admin-postgres-ui:
     extends:
-      file: docker-storage-configs.yml
+      file: database-configs.yml
       service: storage-pg-admin-postgres-ui
 
   # Observability
   elasticsearch_for_logs:
     extends:
-      file: docker-observability-configs.yml
+      file: observability-and-related-configs.yml
       service: observability_elasticsearch_for_logs
   kibana:
     extends:
-      file: docker-observability-configs.yml
+      file: observability-and-related-configs.yml
       service: observability_kibana
   logstash:
     extends:
-      file: docker-observability-configs.yml
+      file: observability-and-related-configs.yml
       service: observability_logstash
   filebeat:
     extends:
-      file: docker-observability-configs.yml
+      file: observability-and-related-configs.yml
       service: observability_filebeat
   prometheus:
     extends:
-      file: docker-observability-configs.yml
+      file: observability-and-related-configs.yml
       service: observability_prometheus
   grafana:
     extends:
-      file: docker-observability-configs.yml
+      file: observability-and-related-configs.yml
       service: observability_grafana
 
   # Other external services
   rabbitmq:
     extends:
-      file: docker-other-external-configs.yml
+      file: other-services-config.yml
       service: other_external_rabbitmq
   keycloak:
     extends:
-      file: docker-other-external-configs.yml
+      file: other-services-config.yml
       service: other_external_keycloak
   redis:
     extends:
-      file: docker-other-external-configs.yml
+      file: other-services-config.yml
       service: other_redis
 
 volumes:
