@@ -1,4 +1,4 @@
-package com.open.forum.review.infrastructure.external.events;
+package com.open.forum.review.infrastructure.events.consumers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
