@@ -1,6 +1,6 @@
 package com.open.forum.review.infrastructure.events;
 
-import com.open.forum.review.domain.events.publisher.ReactionEventPublisher;
+import com.open.forum.review.domain.events.producer.ReactionEventProducer;
 import com.open.forum.review.domain.events.reaction.ReactionEvent;
 import com.open.forum.review.infrastructure.events.core.AbstractProducer;
 import org.slf4j.Logger;
@@ -9,11 +9,11 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ReactionEventPublisherImpl extends AbstractProducer<String, String, ReactionEvent> implements ReactionEventPublisher {
+public class ReactionEventProducerImpl extends AbstractProducer<String, String, ReactionEvent> implements ReactionEventProducer {
 
-    private static final Logger log = LoggerFactory.getLogger(ReactionEventPublisherImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ReactionEventProducerImpl.class);
 
-    protected ReactionEventPublisherImpl(KafkaTemplate<String, String> kafkaTemplate) {
+    protected ReactionEventProducerImpl(KafkaTemplate<String, String> kafkaTemplate) {
         super(kafkaTemplate);
     }
 
@@ -22,7 +22,7 @@ public class ReactionEventPublisherImpl extends AbstractProducer<String, String,
      */
     @Override
     public void publish(ReactionEvent event) {
-        this.send(event, (sendResult) -> {
+        super.send(event, (sendResult) -> {
             log.info("Reaction event sent successfully: {}", sendResult);
         }, (throwable) -> {
             log.error("Reaction error sending event!", throwable);
