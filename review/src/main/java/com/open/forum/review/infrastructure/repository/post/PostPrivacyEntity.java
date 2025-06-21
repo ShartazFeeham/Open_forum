@@ -1,6 +1,6 @@
 package com.open.forum.review.infrastructure.repository.post;
 
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;

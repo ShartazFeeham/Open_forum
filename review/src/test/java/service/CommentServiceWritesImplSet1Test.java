@@ -11,7 +11,7 @@ import com.open.forum.review.domain.events.producer.CommentEventProducer;
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.repository.CommentRepository;
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import com.open.forum.review.shared.exception.IllegalRequestException;
 import com.open.forum.review.shared.exception.TaskNotCompletableException;
 import com.open.forum.review.shared.helper.TokenExtractor;

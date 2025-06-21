@@ -1,4 +1,4 @@
-package com.open.forum.review.infrastructure.events;
+package com.open.forum.review.infrastructure.events.producers;
 
 import com.open.forum.review.domain.events.comment.CommentEvent;
 import com.open.forum.review.domain.events.producer.CommentEventProducer;

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.open.forum.review.infrastructure.repository.post.PostPrivacyEntity;
 import com.open.forum.review.infrastructure.repository.post.PostPrivacyJpaRepository;
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
@@ -12,18 +12,18 @@ import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
-import static com.open.forum.review.shared.PostPrivacy.REVIEW_ALLOWED;
-import static com.open.forum.review.shared.PostPrivacy.REVIEW_NOT_ALLOWED;
+import static com.open.forum.review.shared.enums.PostPrivacy.REVIEW_ALLOWED;
+import static com.open.forum.review.shared.enums.PostPrivacy.REVIEW_NOT_ALLOWED;
 
 @Slf4j
 @Service
-public class PostEventConsumer {
+public class PostPrivacyEventConsumer {
 
     public static final String PRIVACY = "privacy";
     private final PostPrivacyJpaRepository postPrivacyJpaRepository;
     private final ObjectMapper objectMapper;
 
-    public PostEventConsumer(PostPrivacyJpaRepository postPrivacyJpaRepository, ObjectMapper objectMapper) {
+    public PostPrivacyEventConsumer(PostPrivacyJpaRepository postPrivacyJpaRepository, ObjectMapper objectMapper) {
         this.postPrivacyJpaRepository = postPrivacyJpaRepository;
         this.objectMapper = objectMapper;
     }

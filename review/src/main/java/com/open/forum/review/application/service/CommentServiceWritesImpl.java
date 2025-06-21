@@ -13,7 +13,7 @@ import com.open.forum.review.domain.events.producer.CommentEventProducer;
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.repository.CommentRepository;
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import com.open.forum.review.shared.exception.IllegalRequestException;
 import com.open.forum.review.shared.exception.TaskNotCompletableException;
 import com.open.forum.review.shared.helper.TokenExtractor;
@@ -172,7 +172,7 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
     public void reject(Comment comment) {
         comment.setStatus(CommentStatus.REJECTED);
         try {
-            repository.updateComment(comment);
+            repository.saveComment(comment);
             log.info("Comment rejected successfully: {}", comment);
             publishCommentUpdatedEvent(comment);
         } catch (Exception e) {

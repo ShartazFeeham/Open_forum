@@ -4,7 +4,7 @@ import com.open.forum.review.domain.external.client.PostServiceClient;
 import com.open.forum.review.infrastructure.cache.core.SingleReadCacheTemplate;
 import com.open.forum.review.infrastructure.repository.post.PostPrivacyEntity;
 import com.open.forum.review.infrastructure.repository.post.PostPrivacyJpaRepository;
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import jakarta.validation.constraints.NotNull;
 import org.redisson.api.RedissonClient;
 import org.springframework.stereotype.Component;

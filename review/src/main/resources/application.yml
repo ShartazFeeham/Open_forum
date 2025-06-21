@@ -65,3 +65,5 @@ local:
       external:
         post-privacy-topic: "post-privacy"
         post-privacy-listener-group: "post-privacy-listener-group"
+        comment-analyzed-topic: "comment-analyzed"
+        comment-analyzed-listener-group: "comment-analyzed-listener-group"

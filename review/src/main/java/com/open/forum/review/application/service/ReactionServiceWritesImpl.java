@@ -13,7 +13,7 @@ import com.open.forum.review.domain.model.reaction.Reaction;
 import com.open.forum.review.domain.model.reaction.ReactionStatus;
 import com.open.forum.review.domain.repository.CommentRepository;
 import com.open.forum.review.domain.repository.ReactionRepository;
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import com.open.forum.review.shared.exception.IllegalRequestException;
 import com.open.forum.review.shared.exception.TaskNotCompletableException;
 import com.open.forum.review.shared.helper.TokenExtractor;

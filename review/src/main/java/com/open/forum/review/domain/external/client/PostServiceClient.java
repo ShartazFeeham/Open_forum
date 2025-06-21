@@ -1,6 +1,6 @@
 package com.open.forum.review.domain.external.client;
 
-import com.open.forum.review.shared.PostPrivacy;
+import com.open.forum.review.shared.enums.PostPrivacy;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
