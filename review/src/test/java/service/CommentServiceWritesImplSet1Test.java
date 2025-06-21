@@ -7,7 +7,7 @@ import com.open.forum.review.domain.cache.PostPrivacyCache;
 import com.open.forum.review.domain.cache.UserExistenceCache;
 import com.open.forum.review.domain.events.comment.CommentDeletedEvent;
 import com.open.forum.review.domain.events.comment.CommentUpdatedEvent;
-import com.open.forum.review.domain.events.publisher.CommentEventPublisher;
+import com.open.forum.review.domain.events.producer.CommentEventProducer;
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.repository.CommentRepository;
@@ -32,7 +32,7 @@ class CommentServiceWritesImplSet1Test {
     private CommentRepository repository;
 
     @Mock
-    private CommentEventPublisher eventPublisher;
+    private CommentEventProducer eventPublisher;
 
     @Mock
     private PostPrivacyCache postPrivacyCache;

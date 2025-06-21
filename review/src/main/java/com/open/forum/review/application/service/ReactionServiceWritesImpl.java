@@ -6,7 +6,7 @@ import com.open.forum.review.application.mapper.ReactionMapper;
 import com.open.forum.review.application.service.ports.ReactionServiceWrites;
 import com.open.forum.review.domain.cache.PostPrivacyCache;
 import com.open.forum.review.domain.cache.UserExistenceCache;
-import com.open.forum.review.domain.events.publisher.ReactionEventPublisher;
+import com.open.forum.review.domain.events.producer.ReactionEventProducer;
 import com.open.forum.review.domain.events.reaction.ReactionCreatedEvent;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.model.reaction.Reaction;
@@ -33,7 +33,7 @@ public class ReactionServiceWritesImpl implements ReactionServiceWrites {
     private final ReactionRepository repository;
     private final PostPrivacyCache postPrivacyCache;
     private final CommentRepository commentRepository;
-    private final ReactionEventPublisher reactionEventPublisher;
+    private final ReactionEventProducer reactionEventProducer;
     private final UserExistenceCache userExistenceCache;
     private static final Logger log = LoggerFactory.getLogger(ReactionServiceWritesImpl.class);
 
@@ -114,7 +114,7 @@ public class ReactionServiceWritesImpl implements ReactionServiceWrites {
 
     private void publishReactionCreatedEvent(Reaction reaction) {
         final ReactionCreatedEvent event = new ReactionCreatedEvent(reaction);
-        reactionEventPublisher.publish(event);
+        reactionEventProducer.publish(event);
         log.info("Reaction created event published: {}", event);
     }
 

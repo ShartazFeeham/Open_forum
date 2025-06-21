@@ -9,7 +9,7 @@ import com.open.forum.review.domain.cache.UserExistenceCache;
 import com.open.forum.review.domain.events.comment.CommentCreatedEvent;
 import com.open.forum.review.domain.events.comment.CommentDeletedEvent;
 import com.open.forum.review.domain.events.comment.CommentUpdatedEvent;
-import com.open.forum.review.domain.events.publisher.CommentEventPublisher;
+import com.open.forum.review.domain.events.producer.CommentEventProducer;
 import com.open.forum.review.domain.model.comment.Comment;
 import com.open.forum.review.domain.model.comment.CommentStatus;
 import com.open.forum.review.domain.repository.CommentRepository;
@@ -29,7 +29,7 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
 
     private final CommentRepository repository;
     private final Logger log = LoggerFactory.getLogger(CommentServiceWritesImpl.class);
-    private final CommentEventPublisher commentEventPublisher;
+    private final CommentEventProducer commentEventProducer;
     private final PostPrivacyCache postPrivacyCache;
     private final UserExistenceCache userExistenceCache;
 
@@ -42,19 +42,26 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
     public void create(CommentCreateDTO dto) {
         dto.validateOrThrow();
         Comment comment = CommentMapper.toComment(dto);
+        comment.validateOrThrow();
+        log.info("Comment seems to be valid.");
         validateUserExistence(comment);
         PostPrivacy postPrivacy = postPrivacyCache.getPostPrivacy(comment.getPostId());
         checkWhetherCommentIsAllowed(postPrivacy, comment);
-        comment.setStatus(CommentStatus.PUBLISHED);
+        comment.setStatus(CommentStatus.PENDING);
         try {
-            repository.saveComment(comment);
-            log.info("Comment saved successfully: {}", comment);
+            log.info("Comment is set to pending, can be added after analysis server verification.");
             publishCommentCreatedEvent(comment);
         } catch (Exception e) {
             log.error("Error saving comment: {}", e.getMessage());
             throw new TaskNotCompletableException("Cannot perform this action right now."
                     + (comment.isReply() ? "comment" : "post") + " may not exit! Or please try again later.");
         }
+    }
+
+    @Override
+    public void create(Comment comment) {
+        repository.saveComment(comment);
+        log.info("Comment saved successfully: {}", comment);
     }
 
     private void validateUserExistence(Comment comment) {
@@ -81,7 +88,7 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
 
     private void publishCommentCreatedEvent(Comment comment) {
         final CommentCreatedEvent event = new CommentCreatedEvent(comment);
-        commentEventPublisher.publish(event);
+        commentEventProducer.publish(event);
         log.info("Comment created event published: {}", event);
     }
 
@@ -113,7 +120,7 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
 
     private void publishCommentDeletedEvent(Comment comment) {
         final CommentDeletedEvent event = new CommentDeletedEvent(comment);
-        commentEventPublisher.publish(event);
+        commentEventProducer.publish(event);
         log.info("Comment deleted event published: {}", event);
     }
 
@@ -128,10 +135,10 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
         commentOp.ifPresentOrElse(
                 comment -> {
                     Comment updatedComment = CommentMapper.toComment(dto, comment);
+                    updatedComment.validateOrThrow();
                     try {
                         checkForUserRight(comment, "update");
-                        repository.updateComment(updatedComment);
-                        log.info("Comment updated successfully: {}", updatedComment);
+                        updatedComment.setStatus(CommentStatus.PENDING);
                         publishCommentUpdatedEvent(updatedComment);
                     } catch (Exception e) {
                         log.error("Error updating comment: {}, error: {}", updatedComment, e.getMessage());
@@ -144,9 +151,15 @@ public class CommentServiceWritesImpl implements CommentServiceWrites {
         );
     }
 
+    @Override
+    public void update(Comment comment) {
+        repository.updateComment(comment);
+        log.info("Comment updated successfully: {}", comment);
+    }
+
     private void publishCommentUpdatedEvent(Comment updatedComment) {
         final CommentUpdatedEvent event = new CommentUpdatedEvent(updatedComment);
-        commentEventPublisher.publish(event);
+        commentEventProducer.publish(event);
         log.info("Comment updated event published: {}", event);
     }
 
